@@ -1,4 +1,4 @@
-import { Bytes, Address, BigInt, log } from "@graphprotocol/graph-ts";
+import { Address } from "@graphprotocol/graph-ts";
 import {
   AuctionCancelled,
   AuctionCreated,
@@ -6,21 +6,12 @@ import {
 } from "../../generated/AuctionHouse/AuctionHouse";
 import {
   HeroAuction,
-  Transaction,
 } from "../../generated/schema";
 import {
   getOrCreateAccount,
-  getOrCreateHero,
-  getOrCreateQuest,
-  getOrCreateQuestReward,
-  isZeroAddress,
   getOrCreateTransaction,
   getOrCreateHeroAuction,
 } from "./common"
-import {
-  getQuestTypeFromAddress,
-  getQuestStatus,
-} from "./mapping"
 
 export function handleAuctionCancelled (
   event: AuctionCancelled,

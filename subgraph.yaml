@@ -79,30 +79,55 @@ schema:
 #       eventHandlers:
 #       file: ./src/mappings/hero-sale.ts
 
+# dataSources:
+#   - kind: ethereum/contract
+#     name: AuctionHouse
+#     network: mainnet
+#     source:
+#       address: "0x13a65B9F8039E2c032Bc022171Dc05B30c3f2892"
+#       abi: AuctionHouse
+#       startBlock: 18597670
+#     mapping:
+#       kind: ethereum/events
+#       apiVersion: 0.0.4
+#       language: wasm/assemblyscript
+#       entities:
+#         - Hero
+#         - Account
+#         - Transaction
+#         - HeroAuction
+#       abis:
+#         - name: AuctionHouse
+#           file: ./abis/AuctionHouse.json
+#       eventHandlers:
+#         - event: AuctionCancelled(uint256,indexed uint256)
+#           handler: handleAuctionCancelled
+#         - event: AuctionCreated(uint256,indexed address,indexed uint256,uint256,uint256,uint256,address)
+#           handler: handleAuctionCreated
+#         - event: AuctionSuccessful(uint256,indexed uint256,uint256,address)
+#           handler: handleAuctionSuccessful
+#       file: ./src/mappings/auction-house.ts
+
 dataSources:
   - kind: ethereum/contract
-    name: AuctionHouse
+    name: MeditationCircle
     network: mainnet
     source:
-      address: "0x13a65B9F8039E2c032Bc022171Dc05B30c3f2892"
-      abi: AuctionHouse
-      startBlock: 18597670
+      address: "0x0594d86b2923076a2316eaea4e1ca286daa142c1"
+      abi: MeditationCircle
+      startBlock: 20259186
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - Hero
-        - Account
-        - Transaction
+        - Meditation
       abis:
-        - name: AuctionHouse
-          file: ./abis/AuctionHouse.json
+        - name: MeditationCircle
+          file: ./abis/MeditationCircle.json
       eventHandlers:
-        - event: AuctionCancelled(uint256,indexed uint256)
-          handler: handleAuctionCancelled
-        - event: AuctionCreated(uint256,indexed address,indexed uint256,uint256,uint256,uint256,address)
-          handler: handleAuctionCreated
-        - event: AuctionSuccessful(uint256,indexed uint256,uint256,address)
-          handler: handleAuctionSuccessful
-      file: ./src/mappings/auction-house.ts
+        - event: MeditationBegun(indexed address,indexed uint256,uint256,uint8,uint8,uint8,address)
+          handler: handleMeditationBegun
+        - event: MeditationCompleted(indexed address,indexed uint256,uint256)
+          handler: handleMeditationCompleted
+      file: ./src/mappings/meditation-circle.ts

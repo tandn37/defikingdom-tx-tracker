@@ -13,6 +13,16 @@ QUEST_STATUS_MAPPING.set(1, "Started");
 QUEST_STATUS_MAPPING.set(2, "Completed");
 QUEST_STATUS_MAPPING.set(3, "Cancelled");
 
+let HERO_STAT_MAPPING = new Map<i32, string>()
+HERO_STAT_MAPPING.set(0, "Strength");
+HERO_STAT_MAPPING.set(2, "Agility");
+HERO_STAT_MAPPING.set(4, "Intelligence");
+HERO_STAT_MAPPING.set(6, "Wisdom");
+HERO_STAT_MAPPING.set(8, "Luck");
+HERO_STAT_MAPPING.set(10, "Vitality");
+HERO_STAT_MAPPING.set(12, "Endurance");
+HERO_STAT_MAPPING.set(14, "Dexterity");
+
 let ITEM_NAME_MAPPING = new Map<string, string>()
 ITEM_NAME_MAPPING.set("0x24ea0d436d3c2602fbfefbe6a16bbc304c963d04", "GaiaTears");
 ITEM_NAME_MAPPING.set("0x6e1bc01cc52d165b357c42042cf608159a2b81c1", "Ambertaffy");
@@ -37,17 +47,23 @@ ITEM_NAME_MAPPING.set("0x9edb3da18be4b03857f3d39f83e5c6aa", "GoldenEgg");
 export function getQuestTypeFromAddress(address: string): string {
   return QUEST_TYPE_ADDRESS_MAPPING.has(address) ?
     QUEST_TYPE_ADDRESS_MAPPING.get(address) :
-    'Undefined';
+    "Undefined";
 };
 
 export function getQuestStatus(status: i32): string {
   return QUEST_STATUS_MAPPING.has(status) ?
     QUEST_STATUS_MAPPING.get(status) :
-    'Undefined';
+    "Undefined";
 };
 
 export function getItemName(address: string): string {
   return ITEM_NAME_MAPPING.has(address) ?
     ITEM_NAME_MAPPING.get(address) :
-    'Undefined';
+    "Undefined";
+}
+
+export function getHeroStat(stat: i32): string {
+  return HERO_STAT_MAPPING.has(stat) ?
+    HERO_STAT_MAPPING.get(stat) :
+    "Undefined";
 }

@@ -14,7 +14,8 @@ enum TransactionType {
   HeroReceive
   HeroInfuseCrystal
   HeroSummon
-  HeroLevelUp
+  HeroMeditationBegun
+  HeroMeditationCompleted
   GardenDeposit
   GardenWithdraw
   GardenHarvest
@@ -49,6 +50,11 @@ enum AuctionStatus {
   Cancelled
 }
 
+enum MeditationStatus {
+  Begun
+  Completed
+}
+
 enum ItemName {
   Undefined
   GaiaTears
@@ -71,6 +77,18 @@ enum ItemName {
   GreyPetEgg
   GoldenEgg
 }
+
+enum HeroStat {
+  Strength
+  Agility
+  Intelligence
+  Wisdom
+  Luck
+  Vitality
+  Endurance
+  Dexterity
+}
+
 type Account @entity {
   id: ID!
 }
@@ -120,6 +138,17 @@ type HeroAuction @entity {
   winner: Account
 }
 
+type Meditation @entity {
+  id: ID!
+  player: Account!
+  hero: Hero!
+  status: String
+  primaryStat: HeroStat
+  secondaryStat: HeroStat
+  tertiaryStat: HeroStat
+  attunementCrystal: String
+}
+
 type Transaction @entity {
   id: ID!
   block: Int!
@@ -132,5 +161,6 @@ type Transaction @entity {
   gasUsed: BigInt
   quest: Quest
   auction: HeroAuction
+  meditation: Meditation
   timestamp: Int!
 }

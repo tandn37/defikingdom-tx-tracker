@@ -11,6 +11,7 @@ import {
   QuestReward,
   Quest,
   HeroAuction,
+  Meditation,
 } from "../../generated/schema";
 import {
   getItemName,
@@ -134,6 +135,23 @@ export function getOrCreateHeroAuction(
     auction.save();
   }
   return auction as HeroAuction;
+}
+
+export function getOrCreateMeditation(
+  meditationId: BigInt,
+  player: Address,
+  heroId: BigInt,
+): Meditation {
+  let meditation = Meditation.load(meditationId.toString());
+  let playerAccount = getOrCreateAccount(player.toHex());
+  let hero = getOrCreateHero(heroId.toString())
+  if (!meditation) {
+    meditation = new Meditation(meditationId.toString());
+    meditation.hero = hero.id;
+    meditation.player = playerAccount.id;
+    meditation.save();
+  }
+  return meditation as Meditation;
 }
 
 let ZERO_ADDR = "0x0000000000000000000000000000000000000000";
