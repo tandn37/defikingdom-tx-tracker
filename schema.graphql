@@ -1,0 +1,136 @@
+enum TransactionType {
+  TokenSend
+  TokenReceive
+  QuestStarted
+  QuestCanceled
+  QuestCompleted
+  HeroAuctionCancelled
+  HeroAuctionCreated
+  HeroAuctionBuySuccessful
+  HeroAuctionSellSuccessful
+  HeroRentSuccess
+  HeroRentCancel
+  HeroSend
+  HeroReceive
+  HeroInfuseCrystal
+  HeroSummon
+  HeroLevelUp
+  GardenDeposit
+  GardenWithdraw
+  GardenHarvest
+  SeedAdd
+  SeedRemove
+  BankDeposit
+  BankWithdraw
+  Swap
+  ItemBuy
+  ItemSell
+}
+
+enum QuestType {
+  Undefined
+  Forager
+  Miner
+  Fisher
+  Gardener
+  WishingWell
+}
+
+enum QuestStatus {
+  Undefined
+  Started
+  Completed
+  Cancelled
+}
+
+enum AuctionStatus {
+  Selling
+  Sold
+  Cancelled
+}
+
+enum ItemName {
+  Undefined
+  GaiaTears
+  Ambertaffy
+  Darkweed
+  Goldvein
+  Ragweed
+  Redleaf
+  Rockroot
+  SwiftThistle
+  Bloater
+  Ironscale
+  Lanterneye
+  Redgill
+  Sailfish
+  Shimmerskin
+  Silverfin
+  ShvasRune
+  BluePetEgg
+  GreyPetEgg
+  GoldenEgg
+}
+type Account @entity {
+  id: ID!
+}
+
+type Hero @entity {
+  id: ID!
+  price: BigInt
+}
+
+type Item @entity {
+  id: ID!
+  name: String!
+}
+
+type Quest @entity {
+  id: ID!
+  type: QuestType!
+  address: String!
+  heroes: [Hero!]!
+  player: Account!
+  startTime: Int
+  startBlock: Int
+  completeAtTime: Int
+  attempts: Int
+  status: QuestStatus!
+  questRewards: [QuestReward!] @derivedFrom(field: "quest")
+}
+
+type QuestReward @entity {
+  id: ID!
+  player: Account!
+  quest: Quest!
+  hero: Hero!
+  item: Item!
+  itemQuantity: Int!
+}
+
+type HeroAuction @entity {
+  id: ID!
+  tokenId: BigInt!
+  status: String
+  owner: Account!
+  startingPrice: Int
+  endingPrice: Int
+  duration: Int
+  totalPrice: Int
+  winner: Account
+}
+
+type Transaction @entity {
+  id: ID!
+  block: Int!
+  hash: String!
+  player: Account!
+  type: TransactionType!
+  value: BigInt!
+  contractAddress: Bytes!
+  gasPrice: BigInt!
+  gasUsed: BigInt
+  quest: Quest
+  auction: HeroAuction
+  timestamp: Int!
+}

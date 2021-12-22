@@ -1,0 +1,108 @@
+specVersion: 0.0.2
+description: Indexing all DefiKingdom transaction
+repository: https://github.com/blocklytics/ethereum-blocks
+schema:
+  file: ./schema.graphql
+# dataSources:
+#   - kind: ethereum/contract
+#     name: Jewel
+#     network: mainnet
+#     source:
+#       address: "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F"
+#       abi: Jewel
+#       startBlock: 16339532
+#     mapping:
+#       kind: ethereum/events
+#       apiVersion: 0.0.4
+#       language: wasm/assemblyscript
+#       entities:
+#         - Token
+#         - Account
+#         - Transaction
+#       abis:
+#         - name: Jewel
+#           file: ./abis/ERC20.json
+#       eventHandlers:
+#         - event: Transfer(indexed address,indexed address,uint256)
+#           handler: handleTransferEvent
+#       file: ./src/mappings/jewel.ts
+  
+# dataSources:
+#   - kind: ethereum/contract
+#     name: Quest
+#     network: mainnet
+#     source:
+#       address: "0x5100Bd31b822371108A0f63DCFb6594b9919Eaf4"
+#       abi: Quest
+#       startBlock: 19875503
+#     mapping:
+#       kind: ethereum/events
+#       apiVersion: 0.0.4
+#       language: wasm/assemblyscript
+#       entities:
+#         - Quest
+#         - Account
+#         - Transaction
+#       abis:
+#         - name: Quest
+#           file: ./abis/Quest.json
+#       eventHandlers:
+#         - event: QuestCanceled(indexed uint256,indexed address,indexed uint256,(uint256,address,uint256[],address,uint256,uint256,uint256,uint8,uint8))
+#           handler: handleQuestCanceled
+#         - event: QuestCompleted(indexed uint256,indexed address,indexed uint256,(uint256,address,uint256[],address,uint256,uint256,uint256,uint8,uint8))
+#           handler: handleQuestCompleted
+#         - event: QuestStarted(indexed uint256,indexed address,indexed uint256,(uint256,address,uint256[],address,uint256,uint256,uint256,uint8,uint8))
+#           handler: handleQuestStarted
+#         - event: QuestReward(indexed uint256,indexed address,uint256,address,uint256)
+#           handler: handleQuestReward
+#       file: ./src/mappings/quest.ts
+
+# dataSources:
+#   - kind: ethereum/contract
+#     name: HeroSale
+#     network: mainnet
+#     source:
+#       address: "0x13a65B9F8039E2c032Bc022171Dc05B30c3f2892"
+#       abi: HeroSale
+#       startBlock: 18597670
+#     mapping:
+#       kind: ethereum/events
+#       apiVersion: 0.0.4
+#       language: wasm/assemblyscript
+#       entities:
+#         - Hero
+#         - Account
+#         - Transaction
+#       abis:
+#         - name: HeroSale
+#           file: ./abis/HeroSale.json
+#       eventHandlers:
+#       file: ./src/mappings/hero-sale.ts
+
+dataSources:
+  - kind: ethereum/contract
+    name: AuctionHouse
+    network: mainnet
+    source:
+      address: "0x13a65B9F8039E2c032Bc022171Dc05B30c3f2892"
+      abi: AuctionHouse
+      startBlock: 18597670
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Hero
+        - Account
+        - Transaction
+      abis:
+        - name: AuctionHouse
+          file: ./abis/AuctionHouse.json
+      eventHandlers:
+        - event: AuctionCancelled(uint256,indexed uint256)
+          handler: handleAuctionCancelled
+        - event: AuctionCreated(uint256,indexed address,indexed uint256,uint256,uint256,uint256,address)
+          handler: handleAuctionCreated
+        - event: AuctionSuccessful(uint256,indexed uint256,uint256,address)
+          handler: handleAuctionSuccessful
+      file: ./src/mappings/auction-house.ts
