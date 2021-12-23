@@ -1,21 +1,31 @@
 enum TransactionType {
   TokenSend
   TokenReceive
+
   QuestStarted
   QuestCanceled
   QuestCompleted
-  HeroAuctionCancelled
-  HeroAuctionCreated
-  HeroAuctionBuySuccessful
-  HeroAuctionSellSuccessful
-  HeroRentSuccess
-  HeroRentCancel
+
+  HeroGen0Purchase
+  HeroCrystalOpen
+  HeroCrystalSummoned
+
+  HeroSaleCancelled
+  HeroSaleCreated
+  HeroSaleBuySuccessful
+  HeroSaleSellSuccessful
+  
+  HeroRentalCancelled
+  HeroRentalCreated
+  HeroRentSuccessful
+  HeroRentOutSuccessful
+
   HeroSend
   HeroReceive
-  HeroInfuseCrystal
-  HeroSummon
+
   HeroMeditationBegun
   HeroMeditationCompleted
+  
   GardenDeposit
   GardenWithdraw
   GardenHarvest
@@ -47,6 +57,8 @@ enum QuestStatus {
 enum AuctionStatus {
   Selling
   Sold
+  Renting
+  Rent
   Cancelled
 }
 
@@ -79,6 +91,7 @@ enum ItemName {
 }
 
 enum HeroStat {
+  Undefined
   Strength
   Agility
   Intelligence
@@ -87,6 +100,11 @@ enum HeroStat {
   Vitality
   Endurance
   Dexterity
+}
+
+enum AuctionType {
+  HeroSale
+  HeroRental
 }
 
 type Account @entity {
@@ -128,14 +146,36 @@ type QuestReward @entity {
 
 type HeroAuction @entity {
   id: ID!
-  tokenId: BigInt!
+  hero: Hero!
   status: String
   owner: Account!
-  startingPrice: Int
-  endingPrice: Int
+  type: AuctionType!
+  startingPrice: BigInt
+  endingPrice: BigInt
   duration: Int
-  totalPrice: Int
+  totalPrice: BigInt
   winner: Account
+}
+
+type Crystal @entity {
+  id: ID!
+  player: Account
+  hero: Hero
+  summoner: Hero
+  assistant: Hero
+  generation: Int
+  createdBlock: Int
+  summonerTears: Int
+  assistantTears: Int
+  bonusItem: String
+}
+
+type HeroSale @entity {
+  id: ID!
+  player: Account!
+  crystal: Crystal!
+  createdBlock: Int!
+  purchasePrice: BigInt!
 }
 
 type Meditation @entity {
@@ -162,5 +202,7 @@ type Transaction @entity {
   quest: Quest
   auction: HeroAuction
   meditation: Meditation
+  crystal: Crystal
+  heroSale: HeroSale
   timestamp: Int!
 }

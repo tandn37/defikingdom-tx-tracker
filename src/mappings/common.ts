@@ -2,9 +2,11 @@ import {
   Address,
   BigInt,
   Bytes,
+  log,
 } from "@graphprotocol/graph-ts";
 import {
   Account,
+  Crystal,
   Hero,
   Transaction,
   Item,
@@ -121,18 +123,33 @@ export function getOrCreateTransaction(
   return tx as Transaction;
 }
 
+export function getAuctionId(
+  auctionId: BigInt,
+  type: string
+): string {
+  return auctionId.toString() + "_" + type;
+}
+
 export function getOrCreateHeroAuction(
   auctionId: BigInt,
   tokenId: BigInt,
   owner: Address,
+  type: string,
 ): HeroAuction {
-  let auction = HeroAuction.load(auctionId.toString());
+  let id = getAuctionId(auctionId, type);
+  let auction = HeroAuction.load(id);
   let ownerAccount = getOrCreateAccount(owner.toHex());
+  let hero = getOrCreateHero(tokenId.toString());
   if (!auction) {
-    auction = new HeroAuction(auctionId.toString());
-    auction.tokenId = tokenId;
+    auction = new HeroAuction(id);
+    auction.hero = hero.id;
     auction.owner = ownerAccount.id;
+    auction.type = type;
     auction.save();
+  } else {
+    if (type == "HeroSale" || type == "HeroRental") {
+      log.info("FOUND EXIST AUCTION {}", [auction.id])
+    }
   }
   return auction as HeroAuction;
 }
@@ -152,6 +169,18 @@ export function getOrCreateMeditation(
     meditation.save();
   }
   return meditation as Meditation;
+}
+
+export function getOrCreateCrystal(
+  crystalId: BigInt
+): Crystal {
+  let crystal = Crystal.load(crystalId.toString());
+
+  if (!crystal) {
+    crystal = new Crystal(crystalId.toString());
+    crystal.save();
+  }
+  return crystal as Crystal;
 }
 
 let ZERO_ADDR = "0x0000000000000000000000000000000000000000";

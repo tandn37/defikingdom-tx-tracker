@@ -477,7 +477,7 @@
               },
               {
                 "internalType": "uint8",
-                "name": "class",
+                "name": "mainClass",
                 "type": "uint8"
               },
               {

@@ -4,12 +4,7 @@ import {
   MeditationCompleted,
 } from "../../generated/MeditationCircle/MeditationCircle";
 import {
-  Meditation,
-} from "../../generated/schema";
-import {
-  getOrCreateAccount,
   getOrCreateTransaction,
-  getOrCreateHeroAuction,
   getOrCreateMeditation,
 } from "./common"
 import {
@@ -46,7 +41,7 @@ export function handleMeditationBegun(
   tx.save();
 }
 
-export function handleAuctionCreated(
+export function handleMeditationCompleted(
   event: MeditationCompleted,
 ): void {
   let meditation = getOrCreateMeditation(

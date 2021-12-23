@@ -1,22 +1,53 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import {
+  CrystalOpen,
   AuctionCancelled,
   AuctionCreated,
   AuctionSuccessful,
-} from "../../generated/AuctionHouse/AuctionHouse";
+  CrystalSummoned,
+} from "../../generated/HeroSummoning/HeroSummoning";
 import {
   HeroAuction,
 } from "../../generated/schema";
 import {
   getOrCreateAccount,
   getOrCreateTransaction,
+  getOrCreateCrystal,
+  getOrCreateHero,
   getOrCreateHeroAuction,
   getAuctionId,
 } from "./common"
 
-const AUCTION_TYPE: string = "HeroSale";
+const AUCTION_TYPE: string = "HeroRental";
 
-export function handleAuctionCancelled (
+export function handleCrystalOpen(
+  event: CrystalOpen,
+): void {
+  let crystal = getOrCreateCrystal(
+    event.params.crystalId,
+  );
+  let player = getOrCreateAccount(event.params.owner.toHex());
+  let hero = getOrCreateHero(event.params.heroId.toString());
+  crystal.player = player.id;
+  crystal.hero = hero.id;
+  crystal.save();
+
+  let tx = getOrCreateTransaction(
+    event.block.number,
+    event.transaction.hash,
+    event.params.owner,
+    "HeroCrystalOpen",
+    event.transaction.value,
+    event.address,
+    event.transaction.gasPrice,
+    event.transaction.gasUsed,
+    event.block.timestamp,
+  )
+  tx.crystal = crystal.id;
+  tx.save();
+}
+
+export function handleAuctionCancelled(
   event: AuctionCancelled,
 ): void {
   let id = getAuctionId(event.params.auctionId, AUCTION_TYPE);
@@ -28,7 +59,7 @@ export function handleAuctionCancelled (
     event.block.number,
     event.transaction.hash,
     Address.fromString(auction.owner),
-    "HeroSaleCancelled",
+    "HeroRentalCancelled",
     event.transaction.value,
     event.address,
     event.transaction.gasPrice,
@@ -49,7 +80,7 @@ export function handleAuctionCreated(
     AUCTION_TYPE,
   );
   let winnerAccount = getOrCreateAccount(event.params.winner.toHex());
-  auction.status = "Selling";
+  auction.status = "Renting";
   auction.startingPrice = event.params.startingPrice;
   auction.endingPrice = event.params.endingPrice;
   auction.duration = event.params.duration.toI32();
@@ -60,7 +91,7 @@ export function handleAuctionCreated(
     event.block.number,
     event.transaction.hash,
     event.params.owner,
-    "HeroSaleCreated",
+    "HeroRentalCreated",
     event.transaction.value,
     event.address,
     event.transaction.gasPrice,
@@ -79,38 +110,68 @@ export function handleAuctionSuccessful(
   let winnerAccount = getOrCreateAccount(
     event.params.winner.toHex()
   )
-  auction.status = "Sold";
+  auction.status = "Rent";
   auction.totalPrice = event.params.totalPrice
   auction.winner = winnerAccount.id;
   auction.save();
 
-  let sellTx = getOrCreateTransaction(
+  let rentOutTx = getOrCreateTransaction(
     event.block.number,
     event.transaction.hash,
     Address.fromString(auction.owner),
-    "HeroSaleSellSuccessful",
+    "HeroRentOutSuccessful",
     event.transaction.value,
     event.address,
     event.transaction.gasPrice,
     event.transaction.gasUsed,
     event.block.timestamp,
   )
-  sellTx.auction = auction.id;
-  sellTx.gasPrice = BigInt.fromI32(0);
-  sellTx.gasUsed = BigInt.fromI32(0);
-  sellTx.save();
+  rentOutTx.auction = auction.id;
+  rentOutTx.save();
 
-  let buyTx = getOrCreateTransaction(
+  let rentTx = getOrCreateTransaction(
     event.block.number,
     event.transaction.hash,
     Address.fromString(auction.winner),
-    "HeroSaleBuySuccessful",
+    "HeroRentSuccessful",
     event.transaction.value,
     event.address,
     event.transaction.gasPrice,
     event.transaction.gasUsed,
     event.block.timestamp,
   )
-  buyTx.auction = auction.id;
-  buyTx.save();
+  rentTx.auction = auction.id;
+  rentTx.save();
+}
+
+export function handleCrystalSummoned(
+  event: CrystalSummoned
+): void {
+  let crystal = getOrCreateCrystal(event.params.crystalId);
+  let player = getOrCreateAccount(event.params.owner.toHex());
+  let summoner = getOrCreateHero(event.params.summonerId.toString());
+  let assistant = getOrCreateHero(event.params.assistantId.toString());
+  crystal.player = player.id;
+  crystal.summoner = summoner.id;
+  crystal.assistant = assistant.id;
+  crystal.generation = event.params.generation;
+  crystal.createdBlock = event.params.createdBlock.toI32();
+  crystal.summonerTears = event.params.summonerTears;
+  crystal.assistantTears = event.params.assistantTears;
+  crystal.bonusItem = event.params.bonusItem.toHex();
+  crystal.save();
+
+  let tx = getOrCreateTransaction(
+    event.block.number,
+    event.transaction.hash,
+    event.params.owner,
+    "HeroCrystalSummoned",
+    event.transaction.value,
+    event.address,
+    event.transaction.gasPrice,
+    event.transaction.gasUsed,
+    event.block.timestamp,
+  )
+  tx.crystal = crystal.id;
+  tx.save();
 }

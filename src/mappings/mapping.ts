@@ -1,4 +1,5 @@
 
+import { log } from "@graphprotocol/graph-ts";
 let CONTRACT_ADDRESSES = new Map<string, string>()
 CONTRACT_ADDRESSES.set("UniswapV2Factory", "0x9014B937069918bd319f80e8B3BB4A2cf6FAA5F7");
 CONTRACT_ADDRESSES.set("JewelToken", "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F");
@@ -15,13 +16,13 @@ QUEST_STATUS_MAPPING.set(3, "Cancelled");
 
 let HERO_STAT_MAPPING = new Map<i32, string>()
 HERO_STAT_MAPPING.set(0, "Strength");
-HERO_STAT_MAPPING.set(2, "Agility");
-HERO_STAT_MAPPING.set(4, "Intelligence");
-HERO_STAT_MAPPING.set(6, "Wisdom");
-HERO_STAT_MAPPING.set(8, "Luck");
-HERO_STAT_MAPPING.set(10, "Vitality");
-HERO_STAT_MAPPING.set(12, "Endurance");
-HERO_STAT_MAPPING.set(14, "Dexterity");
+HERO_STAT_MAPPING.set(1, "Agility");
+HERO_STAT_MAPPING.set(2, "Intelligence");
+HERO_STAT_MAPPING.set(3, "Wisdom");
+HERO_STAT_MAPPING.set(4, "Luck");
+HERO_STAT_MAPPING.set(5, "Vitality");
+HERO_STAT_MAPPING.set(6, "Endurance");
+HERO_STAT_MAPPING.set(7, "Dexterity");
 
 let ITEM_NAME_MAPPING = new Map<string, string>()
 ITEM_NAME_MAPPING.set("0x24ea0d436d3c2602fbfefbe6a16bbc304c963d04", "GaiaTears");
