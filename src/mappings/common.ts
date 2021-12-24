@@ -14,9 +14,15 @@ import {
   Quest,
   HeroAuction,
   Meditation,
+  Token,
+  TokenTransfer,
+  HeroTransfer,
+  ItemTransfer,
 } from "../../generated/schema";
 import {
   getItemName,
+  getTokenSymbol,
+  getTokenDecimal,
 } from './mapping';
 
 export function getOrCreateAccount(
@@ -29,6 +35,20 @@ export function getOrCreateAccount(
     account.save();
   }
   return account as Account;
+}
+
+export function getOrCreateToken(
+  address: Address,
+): Token {
+  let token = Token.load(address.toString());
+
+  if (!token) {
+    token = new Token(address.toString());
+    token.symbol = getTokenSymbol(address);
+    token.decimal = getTokenDecimal(address);
+    token.save();
+  }
+  return token as Token;
 }
 
 export function getOrCreateHero(
@@ -181,6 +201,48 @@ export function getOrCreateCrystal(
     crystal.save();
   }
   return crystal as Crystal;
+}
+
+export function getOrCreateTokenTransfer(
+  id: Bytes,
+  tokenAddress: Address,
+  from: Address,
+  to: Address,
+  value: BigInt,
+): TokenTransfer {
+  let tokenTransfer = TokenTransfer.load(id.toHex());
+  let token = getOrCreateToken(tokenAddress);
+  let fromAccount = getOrCreateAccount(from.toHex());
+  let toAccount = getOrCreateAccount(to.toHex());
+  if (!tokenTransfer) {
+    tokenTransfer = new TokenTransfer(id.toHex());
+    tokenTransfer.token = token.id;
+    tokenTransfer.from = fromAccount.id;
+    tokenTransfer.to = toAccount.id;
+    tokenTransfer.value = value;
+    tokenTransfer.save();
+  }
+  return tokenTransfer as TokenTransfer;
+}
+
+export function getOrCreateHeroTransfer(
+  hash: Bytes,
+  from: Address,
+  to: Address,
+  heroId: BigInt,
+): HeroTransfer {
+  let heroTransfer = HeroTransfer.load(hash.toHex());
+  let fromAccount = getOrCreateAccount(from.toHex());
+  let toAccount = getOrCreateAccount(to.toHex());
+  let hero = getOrCreateHero(heroId.toString());
+  if (!heroTransfer) {
+    heroTransfer = new HeroTransfer(hash.toHex());
+    heroTransfer.from = fromAccount.id;
+    heroTransfer.to = toAccount.id;
+    heroTransfer.hero = hero.id;
+    heroTransfer.save();
+  }
+  return heroTransfer as HeroTransfer;
 }
 
 let ZERO_ADDR = "0x0000000000000000000000000000000000000000";

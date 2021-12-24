@@ -1,6 +1,6 @@
 enum TransactionType {
-  TokenSend
-  TokenReceive
+  TokenSent
+  TokenReceived
 
   QuestStarted
   QuestCanceled
@@ -20,22 +20,25 @@ enum TransactionType {
   HeroRentSuccessful
   HeroRentOutSuccessful
 
-  HeroSend
-  HeroReceive
+  HeroSent
+  HeroReceived
 
   HeroMeditationBegun
   HeroMeditationCompleted
+  
+  BankDeposited
+  BankWithdrawn
   
   GardenDeposit
   GardenWithdraw
   GardenHarvest
   SeedAdd
   SeedRemove
-  BankDeposit
-  BankWithdraw
+  
   Swap
-  ItemBuy
-  ItemSell
+
+  ItemBought
+  ItemSold
 }
 
 enum QuestType {
@@ -109,6 +112,12 @@ enum AuctionType {
 
 type Account @entity {
   id: ID!
+}
+
+type Token @entity {
+  id: ID!
+  symbol: String!
+  decimal: Int!
 }
 
 type Hero @entity {
@@ -189,6 +198,29 @@ type Meditation @entity {
   attunementCrystal: String
 }
 
+type TokenTransfer @entity {
+  id: ID!
+  token: Token!
+  from: Account!
+  to: Account!
+  value: BigInt!
+}
+
+type HeroTransfer @entity {
+  id: ID!
+  from: Account!
+  to: Account!
+  hero: Hero!
+}
+
+type ItemTransfer @entity {
+  id: ID!
+  from: Account!
+  to: Account!
+  item: Item!
+  tokenId: BigInt!
+}
+
 type Transaction @entity {
   id: ID!
   block: Int!
@@ -204,5 +236,8 @@ type Transaction @entity {
   meditation: Meditation
   crystal: Crystal
   heroSale: HeroSale
+  tokenTransfer: TokenTransfer
+  heroTransfer: HeroTransfer
+  itemsTransfer: [ItemTransfer!]
   timestamp: Int!
 }

@@ -4,7 +4,8 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ blocklytics/ethereum-blocks",
+    "create2": "graph create --node http://localhost:8020 harmony/thrull-defikingdom",
+    "deploy2": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ blocklytics/ethereum-blocks",
     "create-local": "graph create --node http://localhost:8020/ blocklytics/ethereum-blocks",
     "remove-local": "graph remove --node http://localhost:8020/ blocklytics/ethereum-blocks",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 blocklytics/ethereum-blocks",
@@ -15,8 +16,8 @@
     "deploy-poa": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ blocklytics/poa-core-blocks",
     "create-harmony-prod": "graph create --node https://graph.t.hmny.io:8020 harmony/thrull-defikingdom",
     "deploy-harmony-prod": "graph deploy --node https://graph.t.hmny.io:8020 --ipfs http://graph.t.hmny.io:5001 harmony/thrull-defikingdom",
-    "create-harmony": "graph create --node http://localhost:8020 harmony/thrull-defikingdom",
-    "deploy-harmony": "graph deploy --node http://localhost:8020 --ipfs http://localhost:5001 harmony/thrull-defikingdom"
+    "create": "graph create --node http://localhost:8020 harmony/thrull-defikingdom",
+    "deploy": "graph deploy --node http://localhost:8020 --ipfs http://localhost:5001 harmony/thrull-defikingdom"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.20.0",

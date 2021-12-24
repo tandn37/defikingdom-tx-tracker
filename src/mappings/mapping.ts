@@ -1,8 +1,10 @@
 
-import { log } from "@graphprotocol/graph-ts";
-let CONTRACT_ADDRESSES = new Map<string, string>()
-CONTRACT_ADDRESSES.set("UniswapV2Factory", "0x9014B937069918bd319f80e8B3BB4A2cf6FAA5F7");
-CONTRACT_ADDRESSES.set("JewelToken", "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F");
+import { Address, log } from "@graphprotocol/graph-ts";
+
+let TOKEN_ADDRESS_MAPPING = new Map<string, string>()
+TOKEN_ADDRESS_MAPPING.set("0x72Cb10C6bfA5624dD07Ef608027E366bd690048F", "Jewel");
+TOKEN_ADDRESS_MAPPING.set("0x3a4edcf3312f44ef027acfd8c21382a5259936e7", "DFKGold");
+TOKEN_ADDRESS_MAPPING.set("0xA9cE83507D872C5e1273E745aBcfDa849DAA654F", "Bank");
 
 let QUEST_TYPE_ADDRESS_MAPPING = new Map<string, string>()
 QUEST_TYPE_ADDRESS_MAPPING.set("0x3132c76acf2217646fb8391918d28a16bd8a8ef4","Forager");
@@ -67,4 +69,21 @@ export function getHeroStat(stat: i32): string {
   return HERO_STAT_MAPPING.has(stat) ?
     HERO_STAT_MAPPING.get(stat) :
     "Undefined";
+}
+
+export function getTokenSymbol(address: Address): string {
+  return TOKEN_ADDRESS_MAPPING.has(address.toString()) ?
+    TOKEN_ADDRESS_MAPPING.get(address.toString()) :
+    "Undefined";
+}
+
+export function getTokenDecimal(address: Address): i32 {
+  let tokenSymbol = getTokenSymbol(address);
+  if (tokenSymbol == "Jewel") {
+    return 18;
+  } else if (tokenSymbol == "DFKGold") {
+    return 3;
+  } else {
+    return 0;
+  }
 }
