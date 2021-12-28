@@ -2,6 +2,9 @@ import {
   PairCreated,
 } from "../../generated/Dex/UniswapV2Factory";
 import {
+  Pair as PairTemplate,
+} from "../../generated/templates";
+import {
   Burn,
   Mint,
   Swap,
@@ -24,6 +27,7 @@ export function handlePairCreated(
   )
   pair.token0 = getOrCreateToken(event.params.token0).id;
   pair.token1 = getOrCreateToken(event.params.token1).id;
+  PairTemplate.create(event.params.pair)
   pair.save();
 }
 
@@ -43,7 +47,7 @@ export function handleBurn(
     event.block.number,
     event.transaction.hash,
     event.params.to,
-    "SeedRemoved",
+    "LiquidityRemoved",
     event.transaction.value,
     event.address,
     event.transaction.gasPrice,
@@ -74,7 +78,7 @@ export function handleMint(
     event.block.number,
     event.transaction.hash,
     event.params.sender,
-    "SeedAdded",
+    "LiquidityAdded",
     event.transaction.value,
     event.address,
     event.transaction.gasPrice,

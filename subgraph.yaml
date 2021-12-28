@@ -294,31 +294,31 @@ dataSources:
         - Token
         - Pair
       abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
         - name: UniswapV2Factory
           file: ./abis/UniswapV2Factory.json
       eventHandlers:
         - event: PairCreated(indexed address,indexed address,address,uint256)
           handler: handlePairCreated
       file: ./src/mappings/dex.ts
+
+templates:
   - kind: ethereum/contract
-    name: JewelLP
+    name: Pair
     network: mainnet
     source:
-      address: "0xEb579ddcD49A7beb3f205c9fF6006Bb6390F138f"
-      abi: UniswapV2LPToken
-      startBlock: 16339523
+      abi: UniswapV2Pair
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - Token
         - Pair
-        - PairChange
-        - Transaction
+        - Token
       abis:
-        - name: UniswapV2LPToken
-          file: ./abis/UniswapV2LPToken.json
+        - name: UniswapV2Pair
+          file: ./abis/UniswapV2Pair.json
       eventHandlers:
         - event: Burn(indexed address,uint256,uint256,indexed address)
           handler: handleBurn

@@ -1,4 +1,7 @@
 import {
+  ERC20,
+} from "../../generated/Jewel/ERC20";
+import {
   Address,
   BigInt,
   Bytes,
@@ -20,10 +23,6 @@ import {
   PairChange,
   GardenInfo,
 } from "../../generated/schema";
-import {
-  getTokenName,
-  getTokenDecimal,
-} from './mapping';
 
 export let ZERO = BigInt.fromI32(0);
 
@@ -46,8 +45,10 @@ export function getOrCreateToken(
 
   if (!token) {
     token = new Token(address.toHex());
-    token.name = getTokenName(address);
-    token.decimal = getTokenDecimal(address);
+    let tokenContract = ERC20.bind(address);
+    token.name = tokenContract.name();
+    token.symbol = tokenContract.symbol();
+    token.decimal = tokenContract.decimals();
     token.save();
   }
   return token as Token;
