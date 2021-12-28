@@ -12,8 +12,8 @@ import {
 export function handleTransferEvent(
   event: Transfer
 ): void {
-  if (isZeroAddress(event.params.from.toHex()) ||
-    isZeroAddress(event.params.to.toHex())) {
+  if (isZeroAddress(event.params.from) ||
+    isZeroAddress(event.params.to)) {
     return;
   }
   let heroTransfer = getOrCreateHeroTransfer(

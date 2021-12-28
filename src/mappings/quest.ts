@@ -97,7 +97,7 @@ export function handleQuestStarted(
 export function handleQuestReward(
   event: QuestReward
 ): void {
-  if (isZeroAddress(event.params.rewardItem.toHexString())) {
+  if (isZeroAddress(event.params.rewardItem)) {
     return;
   }
   let questReward = getOrCreateQuestReward(

@@ -7,16 +7,28 @@ import {
   isZeroAddress,
   getOrCreateTransaction,
   getOrCreateTokenTransfer,
-} from "./common"
+} from "./common";
+import {
+  isBankTransfer,
+  handleBankTransfer,
+} from "./bank";
+import {
+  isBankAddress,
+} from "./mapping";
 
 // use transfer function instead of event
 export function handleTransferEvent(
   event: Transfer
 ): void {
-  if (isZeroAddress(event.params.from.toHex()) ||
-    isZeroAddress(event.params.to.toHex())) {
+  if (isZeroAddress(event.params.from) ||
+    isZeroAddress(event.params.to)) {
       return;
     }
+  if (isBankTransfer(event)) {
+    handleBankTransfer(event);
+    return;
+  }
+  return;
   let tokenTransfer = getOrCreateTokenTransfer(
     event.params.id,
     event.address,

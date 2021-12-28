@@ -29,13 +29,13 @@ enum TransactionType {
   BankDeposited
   BankWithdrawn
   
-  GardenDeposit
-  GardenWithdraw
-  GardenHarvest
-  SeedAdd
-  SeedRemove
-  
-  Swap
+  GardenDeposited
+  GardenWithdrawn
+  GardenHarvested
+
+  SeedAdded
+  SeedRemoved
+  TokenSwapped
 
   ItemBought
   ItemSold
@@ -70,8 +70,11 @@ enum MeditationStatus {
   Completed
 }
 
-enum ItemName {
+enum TokenName {
   Undefined
+  Jewel
+  Gold
+  Bank
   GaiaTears
   Ambertaffy
   Darkweed
@@ -116,18 +119,13 @@ type Account @entity {
 
 type Token @entity {
   id: ID!
-  symbol: String!
+  name: TokenName!
   decimal: Int!
 }
 
 type Hero @entity {
   id: ID!
   price: BigInt
-}
-
-type Item @entity {
-  id: ID!
-  name: String!
 }
 
 type Quest @entity {
@@ -149,7 +147,7 @@ type QuestReward @entity {
   player: Account!
   quest: Quest!
   hero: Hero!
-  item: Item!
+  item: Token!
   itemQuantity: Int!
 }
 
@@ -213,12 +211,60 @@ type HeroTransfer @entity {
   hero: Hero!
 }
 
-type ItemTransfer @entity {
+enum ItemTradingType {
+  Sell
+  Buy
+}
+
+type ItemTrading @entity {
   id: ID!
-  from: Account!
-  to: Account!
-  item: Item!
-  tokenId: BigInt!
+  player: Account!
+  type: ItemTradingType!
+  token: Token!
+  quantity: Int!
+  gold: BigInt!
+}
+
+type Pair @entity {
+  id: ID!
+  token0: Token
+  token1: Token
+  reserve0: BigInt
+  reserve1: BigInt
+}
+
+enum GardenType @entity {
+  Deposit
+  Withdraw
+  Harvest
+}
+
+type GardenInfo @entity {
+  id: ID!
+  player: Account!
+  poolId: BigInt!
+  amount: BigInt!
+  type: GardenType!
+  lockAmount: BigInt
+}
+
+enum PairChangeType {
+  Mint
+  Burn
+  Swap
+}
+type PairChange @entity {
+  id: ID!
+  pair: Pair!
+  sender: Account!
+  type: PairChangeType!
+  amount0: BigInt
+  amount1: BigInt
+  amount0In: BigInt
+  amount1In: BigInt
+  amount0Out: BigInt
+  amount1Out: BigInt
+  to: Account
 }
 
 type Transaction @entity {
@@ -238,6 +284,8 @@ type Transaction @entity {
   heroSale: HeroSale
   tokenTransfer: TokenTransfer
   heroTransfer: HeroTransfer
-  itemsTransfer: [ItemTransfer!]
+  itemsTrading: ItemTrading
+  gardenInfo: GardenInfo
+  pairChange: PairChange
   timestamp: Int!
 }

@@ -9,7 +9,6 @@ import {
   Crystal,
   Hero,
   Transaction,
-  Item,
   QuestReward,
   Quest,
   HeroAuction,
@@ -17,13 +16,16 @@ import {
   Token,
   TokenTransfer,
   HeroTransfer,
-  ItemTransfer,
+  Pair,
+  PairChange,
+  GardenInfo,
 } from "../../generated/schema";
 import {
-  getItemName,
-  getTokenSymbol,
+  getTokenName,
   getTokenDecimal,
 } from './mapping';
+
+export let ZERO = BigInt.fromI32(0);
 
 export function getOrCreateAccount(
   address: string,
@@ -40,11 +42,11 @@ export function getOrCreateAccount(
 export function getOrCreateToken(
   address: Address,
 ): Token {
-  let token = Token.load(address.toString());
+  let token = Token.load(address.toHex());
 
   if (!token) {
-    token = new Token(address.toString());
-    token.symbol = getTokenSymbol(address);
+    token = new Token(address.toHex());
+    token.name = getTokenName(address);
     token.decimal = getTokenDecimal(address);
     token.save();
   }
@@ -92,7 +94,7 @@ export function getOrCreateQuestReward(
   let questReward = QuestReward.load(questRewardId);
   let account = getOrCreateAccount(player.toHex());
   let hero = getOrCreateHero(heroId.toString());
-  let item = getOrCreateItem(itemId.toHex());
+  let item = getOrCreateToken(itemId);
   if (!questReward) {
     questReward = new QuestReward(questRewardId);
     questReward.player = account.id;
@@ -105,16 +107,11 @@ export function getOrCreateQuestReward(
   return questReward as QuestReward;
 }
 
-export function getOrCreateItem(
-  address: string,
-): Item {
-  let item = Item.load(address);
-  if (!item) {
-    item = new Item(address);
-    item.name = getItemName(address);
-    item.save();
-  }
-  return item as Item;
+export function getTransactionId(
+  hash: Bytes,
+  type: string,
+): string {
+  return hash.toHex() + "_" + type;
 }
 
 export function getOrCreateTransaction(
@@ -128,7 +125,7 @@ export function getOrCreateTransaction(
   gasUsed: BigInt,
   timestamp: BigInt,
 ): Transaction {
-  let tx = new Transaction(txHash.toHexString() + "_" + type);
+  let tx = new Transaction(getTransactionId(txHash, type));
   let account = getOrCreateAccount(player.toHex());
   tx.block = block.toI32();
   tx.hash = txHash.toHex();
@@ -245,10 +242,64 @@ export function getOrCreateHeroTransfer(
   return heroTransfer as HeroTransfer;
 }
 
+export function getOrCreatePair(
+  address: Address,
+): Pair {
+  let pair = Pair.load(address.toHex());
+  if (!pair) {
+    pair = new Pair(address.toHex());
+    pair.save();
+  }
+
+  return pair as Pair;
+}
+
+export function getOrCreatePairChange(
+  hash: Bytes,
+  pairAddress: Address,
+  sender: Address,
+  type: string,
+): PairChange {
+  let pairChange = PairChange.load(hash.toHex());
+  let pair = getOrCreatePair(pairAddress);
+  let senderAccount = getOrCreateAccount(sender.toHex());
+  if (!pairChange) {
+    pairChange = new PairChange(hash.toHex());
+    pairChange.pair = pair.id;
+    pairChange.sender = senderAccount.id;
+    pairChange.type = type;
+    pairChange.save();
+  }
+
+  return pairChange as PairChange;
+}
+
+export function getOrCreateGardenInfo(
+  hash: Bytes,
+  player: Address,
+  poolId: BigInt,
+  amount: BigInt,
+  type: string,
+): GardenInfo {
+  let id = hash.toHex() + "_" + type;
+  let gardenInfo = GardenInfo.load(id);
+  let playerAccount = getOrCreateAccount(player.toHex());
+  if (!gardenInfo) {
+    gardenInfo = new GardenInfo(id);
+    gardenInfo.player = playerAccount.id;
+    gardenInfo.poolId = poolId;
+    gardenInfo.amount = amount;
+    gardenInfo.type = type;
+    gardenInfo.save();
+  }
+
+  return gardenInfo as GardenInfo;
+}
+
 let ZERO_ADDR = "0x0000000000000000000000000000000000000000";
 
 export function isZeroAddress(
-  address: string,
+  address: Address,
 ): bool {
-  return address == ZERO_ADDR;
+  return address.toHex() == ZERO_ADDR;
 }
