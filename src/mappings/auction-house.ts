@@ -12,6 +12,8 @@ import {
   getOrCreateTransaction,
   getOrCreateHeroAuction,
   getAuctionId,
+  isProfileCreated,
+  isInternalTx,
 } from "./common"
 
 const AUCTION_TYPE: string = "HeroSale";
@@ -19,6 +21,11 @@ const AUCTION_TYPE: string = "HeroSale";
 export function handleAuctionCancelled (
   event: AuctionCancelled,
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+      return;
+    }
+
   let id = getAuctionId(event.params.auctionId, AUCTION_TYPE);
   let auction = HeroAuction.load(id);
   auction.status = "Cancelled";
@@ -42,6 +49,11 @@ export function handleAuctionCancelled (
 export function handleAuctionCreated(
   event: AuctionCreated,
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
+
   let auction = getOrCreateHeroAuction(
     event.params.auctionId,
     event.params.tokenId,
@@ -74,6 +86,11 @@ export function handleAuctionCreated(
 export function handleAuctionSuccessful(
   event: AuctionSuccessful
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
+  
   let id = getAuctionId(event.params.auctionId, AUCTION_TYPE);
   let auction = HeroAuction.load(id);
   let winnerAccount = getOrCreateAccount(

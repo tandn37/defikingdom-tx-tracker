@@ -40,6 +40,9 @@ export function handleProfileUpdated(
   event: ProfileUpdated
 ): void {
   let profile = Profile.load(event.params.profileId.toString());
+  if (!profile) {
+    return;
+  }
   profile.name = event.params.name;
   profile.picId = event.params.picId;
   profile.heroId = event.params.heroId;

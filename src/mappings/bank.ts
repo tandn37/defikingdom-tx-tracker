@@ -5,6 +5,8 @@ import {
 import {
   getOrCreateTransaction,
   getOrCreateTokenTransfer,
+  isInternalTx,
+  isProfileCreated,
 } from "./common"
 import {
   isBankAddress,
@@ -13,6 +15,10 @@ import {
 export function handleDepositTx(
   event: Transfer
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let tokenTransfer = getOrCreateTokenTransfer(
     event.transaction.hash,
     event.address,
@@ -38,6 +44,10 @@ export function handleDepositTx(
 export function handleWithdrawTx(
   event: Transfer
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let tokenTransfer = getOrCreateTokenTransfer(
     event.transaction.hash,
     event.address,

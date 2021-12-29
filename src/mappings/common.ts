@@ -309,3 +309,13 @@ export function isInternalTx(
   }
   return contractEmittedEvent.toHex() != toContractAddress.toHex();
 }
+
+export function isProfileCreated(
+  address: Address,
+): bool {
+  let account = getOrCreateAccount(address.toHex());
+  if (account.profile) {
+    return true;
+  }
+  return false;
+}

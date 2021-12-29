@@ -10,11 +10,17 @@ import {
   getOrCreateTransaction,
   getOrCreateCrystal,
   getOrCreateHero,
+  isInternalTx,
+  isProfileCreated,
 } from "./common"
 
 export function handleCrystalOpen(
   event: CrystalOpen,
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let crystal = getOrCreateCrystal(
     event.params.crystalId,
   );
@@ -42,6 +48,10 @@ export function handleCrystalOpen(
 export function handleGen0Purchase(
   event: Gen0Purchase,
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let heroSale = HeroSale.load(event.transaction.hash.toHex());
   let player = getOrCreateAccount(event.params.owner.toHex());
   let crystal = getOrCreateCrystal(event.params.crystalId);

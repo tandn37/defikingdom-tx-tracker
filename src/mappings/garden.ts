@@ -3,17 +3,23 @@ import {
   Withdraw,
   SendGovernanceTokenReward,
 } from "../../generated/MasterGardener/MasterGardener";
-import { GardenInfo, Transaction } from "../../generated/schema";
+import { Transaction } from "../../generated/schema";
 import {
   getOrCreateTransaction,
   getOrCreateGardenInfo,
   getTransactionId,
+  isInternalTx,
+  isProfileCreated,
   ZERO,
 } from "./common"
 
 export function handleDeposit(
   event: Deposit
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let gardenInfo = getOrCreateGardenInfo(
     event.transaction.hash,
     event.params.user,
@@ -46,6 +52,10 @@ export function handleDeposit(
 export function handleWithdraw(
   event: Withdraw
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let gardenInfo = getOrCreateGardenInfo(
     event.transaction.hash,
     event.params.user,
@@ -71,6 +81,10 @@ export function handleWithdraw(
 export function handleReward(
   event: SendGovernanceTokenReward
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let gardenInfo = getOrCreateGardenInfo(
     event.transaction.hash,
     event.params.user,

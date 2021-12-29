@@ -24,11 +24,18 @@ import {
   handleTransferEvent as handleTransfer,
   handleApprovalEvent as handleApprove,
 } from "./erc20";
-import { log } from "@graphprotocol/graph-ts";
+import {
+  isInternalTx,
+  isProfileCreated,
+} from "./common"
 
 export function handleItemTraded(
   event: ItemTraded,
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let itemTrading = ItemTrading.load(event.transaction.hash.toHex());
   let player = getOrCreateAccount(event.params.player.toHex());
   let isBuyTx = isGoldAddress(event.params.soldItem);
@@ -60,7 +67,6 @@ export function handleItemTraded(
 export function handleItemAdded(
   event: ItemAdded
 ): void {
-  log.info('Createing {}', [event.params.item.toHex()])
   ItemTemplate.create(event.params.item);
 }
 

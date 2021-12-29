@@ -6,6 +6,8 @@ import {
 import {
   getOrCreateTransaction,
   getOrCreateMeditation,
+  isInternalTx,
+  isProfileCreated,
 } from "./common"
 import {
   getHeroStat,
@@ -14,6 +16,10 @@ import {
 export function handleMeditationBegun(
   event: MeditationBegun,
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let meditation = getOrCreateMeditation(
     event.params.meditationId,
     event.params.player,
@@ -44,6 +50,10 @@ export function handleMeditationBegun(
 export function handleMeditationCompleted(
   event: MeditationCompleted,
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let meditation = getOrCreateMeditation(
     event.params.meditationId,
     event.params.player,

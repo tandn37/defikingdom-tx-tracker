@@ -16,6 +16,8 @@ import {
   getOrCreateHero,
   getOrCreateHeroAuction,
   getAuctionId,
+  isInternalTx,
+  isProfileCreated,
 } from "./common"
 
 const AUCTION_TYPE: string = "HeroRental";
@@ -23,6 +25,10 @@ const AUCTION_TYPE: string = "HeroRental";
 export function handleCrystalOpen(
   event: CrystalOpen,
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let crystal = getOrCreateCrystal(
     event.params.crystalId,
   );
@@ -50,8 +56,15 @@ export function handleCrystalOpen(
 export function handleAuctionCancelled(
   event: AuctionCancelled,
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let id = getAuctionId(event.params.auctionId, AUCTION_TYPE);
   let auction = HeroAuction.load(id);
+  if (!auction) {
+    return;
+  }
   auction.status = "Cancelled";
   auction.save();
 
@@ -73,6 +86,10 @@ export function handleAuctionCancelled(
 export function handleAuctionCreated(
   event: AuctionCreated,
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let auction = getOrCreateHeroAuction(
     event.params.auctionId,
     event.params.tokenId,
@@ -105,6 +122,9 @@ export function handleAuctionCreated(
 export function handleAuctionSuccessful(
   event: AuctionSuccessful
 ): void {
+  if (isInternalTx(event.address, event.transaction.to)) {
+    return;
+  }
   let id = getAuctionId(event.params.auctionId, AUCTION_TYPE);
   let auction = HeroAuction.load(id);
   let winnerAccount = getOrCreateAccount(
@@ -115,38 +135,46 @@ export function handleAuctionSuccessful(
   auction.winner = winnerAccount.id;
   auction.save();
 
-  let rentOutTx = getOrCreateTransaction(
-    event.block.number,
-    event.transaction.hash,
-    Address.fromString(auction.owner),
-    "HeroRentOutSuccessful",
-    event.transaction.value,
-    event.address,
-    event.transaction.gasPrice,
-    event.transaction.gasUsed,
-    event.block.timestamp,
-  )
-  rentOutTx.auction = auction.id;
-  rentOutTx.save();
+  if (isProfileCreated(Address.fromString(auction.owner))) {
+    let rentOutTx = getOrCreateTransaction(
+      event.block.number,
+      event.transaction.hash,
+      Address.fromString(auction.owner),
+      "HeroRentOutSuccessful",
+      event.transaction.value,
+      event.address,
+      event.transaction.gasPrice,
+      event.transaction.gasUsed,
+      event.block.timestamp,
+    )
+    rentOutTx.auction = auction.id;
+    rentOutTx.save();
+  }
 
-  let rentTx = getOrCreateTransaction(
-    event.block.number,
-    event.transaction.hash,
-    Address.fromString(auction.winner),
-    "HeroRentSuccessful",
-    event.transaction.value,
-    event.address,
-    event.transaction.gasPrice,
-    event.transaction.gasUsed,
-    event.block.timestamp,
-  )
-  rentTx.auction = auction.id;
-  rentTx.save();
+  if (isProfileCreated(Address.fromString(auction.winner))) {
+    let rentTx = getOrCreateTransaction(
+      event.block.number,
+      event.transaction.hash,
+      Address.fromString(auction.winner),
+      "HeroRentSuccessful",
+      event.transaction.value,
+      event.address,
+      event.transaction.gasPrice,
+      event.transaction.gasUsed,
+      event.block.timestamp,
+    )
+    rentTx.auction = auction.id;
+    rentTx.save();
+  }
 }
 
 export function handleCrystalSummoned(
   event: CrystalSummoned
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let crystal = getOrCreateCrystal(event.params.crystalId);
   let player = getOrCreateAccount(event.params.owner.toHex());
   let summoner = getOrCreateHero(event.params.summonerId.toString());

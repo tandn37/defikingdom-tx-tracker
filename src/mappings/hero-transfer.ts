@@ -10,6 +10,7 @@ import {
   getOrCreateTransaction,
   getOrCreateHeroTransfer,
   isInternalTx,
+  isProfileCreated,
   getOrCreateAccount,
 } from "./common"
 
@@ -19,7 +20,8 @@ export function handleApprovalEvent(
   if (isZeroAddress(event.params.approved)) {
     return;
   }
-  if (isInternalTx(event.address, event.transaction.to)) {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
     return;
   }
   if (event.transaction.from.toHex() != event.params.owner.toHex()) {
@@ -50,7 +52,8 @@ export function handleApprovalEvent(
 export function handleApprovalForAll(
   event: ApprovalForAll,
 ): void {
-  if (isInternalTx(event.address, event.transaction.to)) {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
     return;
   }
   if (event.transaction.from.toHex() != event.params.owner.toHex()) {
@@ -95,33 +98,37 @@ export function handleTransferEvent(
     event.params.tokenId,
   );
 
-  let sentTx = getOrCreateTransaction(
-    event.block.number,
-    event.transaction.hash,
-    event.params.from,
-    "HeroSent",
-    event.transaction.value,
-    event.address,
-    event.transaction.gasPrice,
-    event.transaction.gasUsed,
-    event.block.timestamp,
-  )
-  sentTx.heroTransfer = heroTransfer.id;
-  sentTx.save();
+  if (isProfileCreated(event.params.from)) {
+    let sentTx = getOrCreateTransaction(
+      event.block.number,
+      event.transaction.hash,
+      event.params.from,
+      "HeroSent",
+      event.transaction.value,
+      event.address,
+      event.transaction.gasPrice,
+      event.transaction.gasUsed,
+      event.block.timestamp,
+    )
+    sentTx.heroTransfer = heroTransfer.id;
+    sentTx.save();
+  }
 
-  let receivedTx = getOrCreateTransaction(
-    event.block.number,
-    event.transaction.hash,
-    event.params.from,
-    "HeroReceived",
-    event.transaction.value,
-    event.address,
-    event.transaction.gasPrice,
-    event.transaction.gasUsed,
-    event.block.timestamp,
-  )
-  receivedTx.heroTransfer = heroTransfer.id;
-  receivedTx.gasPrice = BigInt.fromI32(0);
-  receivedTx.gasUsed = BigInt.fromI32(0);
-  receivedTx.save();
+  if (isProfileCreated(event.params.to)) {
+    let receivedTx = getOrCreateTransaction(
+      event.block.number,
+      event.transaction.hash,
+      event.params.to,
+      "HeroReceived",
+      event.transaction.value,
+      event.address,
+      event.transaction.gasPrice,
+      event.transaction.gasUsed,
+      event.block.timestamp,
+    )
+    receivedTx.heroTransfer = heroTransfer.id;
+    receivedTx.gasPrice = BigInt.fromI32(0);
+    receivedTx.gasUsed = BigInt.fromI32(0);
+    receivedTx.save();
+  }
 }

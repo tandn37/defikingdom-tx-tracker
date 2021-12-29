@@ -20,6 +20,7 @@ import {
   getOrCreatePairChange,
   getOrCreateToken,
   getOrCreateTransaction,
+  isProfileCreated,
   ZERO,
 } from "./common";
 import {
@@ -42,6 +43,9 @@ export function handlePairCreated(
 export function handleBurn(
   event: Burn
 ): void {
+  if (!isProfileCreated(event.params.to)) {
+    return;
+  }
   let pairChange = getOrCreatePairChange(
     event.transaction.hash,
     event.address,
@@ -73,6 +77,9 @@ export function handleBurn(
 export function handleMint(
   event: Mint
 ): void {
+  if (!isProfileCreated(event.params.sender)) {
+    return;
+  }
   let pairChange = getOrCreatePairChange(
     event.transaction.hash,
     event.address,
@@ -100,6 +107,9 @@ export function handleMint(
 export function handleSwap(
   event: Swap
 ): void {
+  if (!isProfileCreated(event.params.sender)) {
+    return;
+  }
   let pairChange = getOrCreatePairChange(
     event.transaction.hash,
     event.address,

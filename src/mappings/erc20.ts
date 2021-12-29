@@ -10,6 +10,8 @@ import {
   getOrCreateTokenTransfer,
   getOrCreateToken,
   getOrCreateAccount,
+  isProfileCreated,
+  ZERO,
 } from "./common";
 import {
   isBankTransfer,
@@ -41,35 +43,36 @@ export function handleTransferEvent(
     event.params.value,
   );
   
-  let sentTx = getOrCreateTransaction(
-    event.block.number,
-    event.transaction.hash,
-    event.params.from,
-    "TokenSent",
-    event.transaction.value,
-    event.address,
-    event.transaction.gasPrice,
-    event.transaction.gasUsed,
-    event.block.timestamp,
-  )
-  sentTx.tokenTransfer = tokenTransfer.id;
-  sentTx.save();
-
-  let receivedTx = getOrCreateTransaction(
-    event.block.number,
-    event.transaction.hash,
-    event.params.from,
-    "TokenReceived",
-    event.transaction.value,
-    event.address,
-    event.transaction.gasPrice,
-    event.transaction.gasUsed,
-    event.block.timestamp,
-  )
-  receivedTx.tokenTransfer = tokenTransfer.id;
-  receivedTx.gasPrice = BigInt.fromI32(0);
-  receivedTx.gasUsed = BigInt.fromI32(0);
-  receivedTx.save();
+  if (isProfileCreated(event.params.from)) {
+    let sentTx = getOrCreateTransaction(
+      event.block.number,
+      event.transaction.hash,
+      event.params.from,
+      "TokenSent",
+      event.transaction.value,
+      event.address,
+      event.transaction.gasPrice,
+      event.transaction.gasUsed,
+      event.block.timestamp,
+    )
+    sentTx.tokenTransfer = tokenTransfer.id;
+    sentTx.save();
+  }
+  if (isProfileCreated(event.params.to)) {
+    let receivedTx = getOrCreateTransaction(
+      event.block.number,
+      event.transaction.hash,
+      event.params.to,
+      "TokenReceived",
+      event.transaction.value,
+      event.address,
+      ZERO,
+      ZERO,
+      event.block.timestamp,
+    )
+    receivedTx.tokenTransfer = tokenTransfer.id;
+    receivedTx.save();
+  }
 }
 
 export function handleApprovalEvent(
@@ -79,7 +82,8 @@ export function handleApprovalEvent(
     isZeroAddress(event.params.spender)) {
     return;
   }
-  if (isInternalTx(event.address, event.transaction.to)) {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
     return;
   }
   let tokenApproval = new TokenApproval(event.transaction.hash.toHex());

@@ -9,6 +9,8 @@ import {
   getOrCreateQuestReward,
   isZeroAddress,
   getOrCreateTransaction,
+  isInternalTx,
+  isProfileCreated,
 } from "./common"
 import {
   getQuestStatus,
@@ -17,6 +19,10 @@ import {
 export function handleQuestCanceled(
   event: QuestCanceled,
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let quest = getOrCreateQuest(event.params.questId, event.params.player);
   quest.status = getQuestStatus(event.params.quest.status);
   quest.save();
@@ -39,6 +45,10 @@ export function handleQuestCanceled(
 export function handleQuestCompleted(
   event: QuestCompleted,
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let quest = getOrCreateQuest(event.params.questId, event.params.player);
   quest.status = getQuestStatus(event.params.quest.status);
   quest.save();
@@ -61,6 +71,10 @@ export function handleQuestCompleted(
 export function handleQuestStarted(
   event: QuestStarted
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   let quest = getOrCreateQuest(event.params.questId, event.params.player);
   let questDetail = event.params.quest;
 
@@ -95,6 +109,10 @@ export function handleQuestStarted(
 export function handleQuestReward(
   event: QuestReward
 ): void {
+  if (isInternalTx(event.address, event.transaction.to) ||
+    !isProfileCreated(event.transaction.from)) {
+    return;
+  }
   if (isZeroAddress(event.params.rewardItem)) {
     return;
   }
