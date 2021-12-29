@@ -1,18 +1,30 @@
 import {
   ItemTraded,
+  ItemAdded,
 } from "../../generated/Vendor/Vendor";
+import {
+  Item as ItemTemplate,
+} from "../../generated/templates";
 import {
   ItemTrading,
 } from "../../generated/schema";
 import {
   getOrCreateTransaction,
-  getOrCreateTokenTransfer,
   getOrCreateAccount,
   getOrCreateToken,
 } from "./common"
 import {
   isGoldAddress,
 } from "./mapping";
+import {
+  Approval,
+  Transfer,
+} from "../../generated/Jewel/ERC20";
+import {
+  handleTransferEvent as handleTransfer,
+  handleApprovalEvent as handleApprove,
+} from "./erc20";
+import { log } from "@graphprotocol/graph-ts";
 
 export function handleItemTraded(
   event: ItemTraded,
@@ -43,4 +55,23 @@ export function handleItemTraded(
   )
   tx.itemsTrading = itemTrading.id;
   tx.save();
+}
+
+export function handleItemAdded(
+  event: ItemAdded
+): void {
+  log.info('Createing {}', [event.params.item.toHex()])
+  ItemTemplate.create(event.params.item);
+}
+
+export function handleTransferEvent(
+  event: Transfer
+): void {
+  handleTransfer(event);
+}
+
+export function handleApprovalEvent(
+  event: Approval
+): void {
+  handleApprove(event);
 }

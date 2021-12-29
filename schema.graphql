@@ -1,4 +1,8 @@
 enum TransactionType {
+  ProfileCreated
+  ProfileUpdated
+
+  TokenApproved
   TokenSent
   TokenReceived
 
@@ -6,6 +10,7 @@ enum TransactionType {
   QuestCanceled
   QuestCompleted
 
+  NFTTokenApproved
   HeroGen0Purchase
   HeroCrystalOpen
   HeroCrystalSummoned
@@ -39,15 +44,6 @@ enum TransactionType {
 
   ItemBought
   ItemSold
-}
-
-enum QuestType {
-  Undefined
-  Forager
-  Miner
-  Fisher
-  Gardener
-  WishingWell
 }
 
 enum QuestStatus {
@@ -87,8 +83,19 @@ enum AuctionType {
   HeroRental
 }
 
+type Profile @entity {
+  id: ID!
+  player: Account!,
+  name: String!,
+  createdAt: BigInt!,
+  picId: Int!
+  heroId: BigInt
+}
+
 type Account @entity {
   id: ID!
+  profile: Profile @derivedFrom(field: "player")
+  transactions: [Transaction!] @derivedFrom(field: "player")
 }
 
 type Token @entity {
@@ -105,7 +112,6 @@ type Hero @entity {
 
 type Quest @entity {
   id: ID!
-  type: QuestType!
   address: String!
   heroes: [Hero!]!
   player: Account!
@@ -242,6 +248,23 @@ type PairChange @entity {
   to: Account
 }
 
+type TokenApproval @entity {
+  id: ID!
+  token: Token!
+  owner: Account!
+  spender: String!
+  amount: BigInt
+}
+
+type HeroApproval @entity {
+  id: ID!
+  token: String!
+  owner: Account!
+  spender: Account!
+  tokenId: BigInt
+  approvedAll: Boolean
+}
+
 type Transaction @entity {
   id: ID!
   block: Int!
@@ -262,5 +285,8 @@ type Transaction @entity {
   itemsTrading: ItemTrading
   gardenInfo: GardenInfo
   pairChange: PairChange
+  profile: Profile
+  tokenApproval: TokenApproval
+  heroApproval: HeroApproval
   timestamp: Int!
 }

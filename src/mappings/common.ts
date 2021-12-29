@@ -74,7 +74,6 @@ export function getOrCreateQuest(
   let account = getOrCreateAccount(player.toHexString());
   if (!quest) {
     quest = new Quest(questId.toString());
-    quest.type = "Undefined";
     quest.address = '';
     quest.heroes = [];
     quest.player = account.id;
@@ -164,10 +163,6 @@ export function getOrCreateHeroAuction(
     auction.owner = ownerAccount.id;
     auction.type = type;
     auction.save();
-  } else {
-    if (type == "HeroSale" || type == "HeroRental") {
-      log.info("FOUND EXIST AUCTION {}", [auction.id])
-    }
   }
   return auction as HeroAuction;
 }
@@ -303,4 +298,14 @@ export function isZeroAddress(
   address: Address,
 ): bool {
   return address.toHex() == ZERO_ADDR;
+}
+
+export function isInternalTx(
+  contractEmittedEvent: Address,
+  toContractAddress: Address | null,
+): bool {
+  if (!toContractAddress) {
+    return false;
+  }
+  return contractEmittedEvent.toHex() != toContractAddress.toHex();
 }

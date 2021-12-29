@@ -11,7 +11,6 @@ import {
   getOrCreateTransaction,
 } from "./common"
 import {
-  getQuestTypeFromAddress,
   getQuestStatus,
 } from "./mapping"
 
@@ -66,7 +65,6 @@ export function handleQuestStarted(
   let questDetail = event.params.quest;
 
   quest.address = questDetail.quest.toHexString();
-  quest.type = getQuestTypeFromAddress(questDetail.quest.toHexString());
   
   let heroes = quest.heroes;
   heroes.push(event.params.heroId.toString());

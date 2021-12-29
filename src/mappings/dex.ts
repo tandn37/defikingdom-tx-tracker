@@ -10,6 +10,10 @@ import {
   Swap,
   Sync,
 } from "../../generated/JewelLP/UniswapV2LPToken";
+import {
+  Approval,
+  Transfer,
+} from "../../generated/Jewel/ERC20";
 
 import {
   getOrCreatePair,
@@ -17,7 +21,11 @@ import {
   getOrCreateToken,
   getOrCreateTransaction,
   ZERO,
-} from "./common"
+} from "./common";
+import {
+  handleTransferEvent as handleTransfer,
+  handleApprovalEvent as handleApprove,
+} from "./erc20";
 
 export function handlePairCreated(
   event: PairCreated
@@ -129,4 +137,16 @@ export function handleSync(
   pair.reserve0 = event.params.reserve0;
   pair.reserve1 = event.params.reserve1;
   pair.save();
+}
+
+export function handleTransferEvent(
+  event: Transfer
+): void {
+  handleTransfer(event);
+}
+
+export function handleApprovalEvent(
+  event: Approval
+): void {
+  handleApprove(event);
 }

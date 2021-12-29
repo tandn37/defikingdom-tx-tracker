@@ -63,7 +63,6 @@ export function handleWithdrawTx(
 export function isBankTransfer(
   event: Transfer
 ): bool {
-  log.info('FROM {} TO {}', [event.params.from.toHex(), event.params.to.toHex()]);
   return isBankAddress(event.params.from) || isBankAddress(event.params.to);
 }
 

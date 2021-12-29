@@ -1,22 +1,24 @@
 import { BigInt } from "@graphprotocol/graph-ts";
 import {
+  Approval,
   Transfer
 } from "../../generated/Jewel/ERC20";
-import { Transaction } from "../../generated/schema";
+import { TokenApproval } from "../../generated/schema";
 import {
   isZeroAddress,
   getOrCreateTransaction,
   getOrCreateTokenTransfer,
+  getOrCreateToken,
+  getOrCreateAccount,
 } from "./common";
 import {
   isBankTransfer,
   handleBankTransfer,
 } from "./bank";
 import {
-  isBankAddress,
-} from "./mapping";
+  isInternalTx
+} from './common';
 
-// use transfer function instead of event
 export function handleTransferEvent(
   event: Transfer
 ): void {
@@ -28,9 +30,11 @@ export function handleTransferEvent(
     handleBankTransfer(event);
     return;
   }
-  return;
+  if (isInternalTx(event.address, event.transaction.to)) {
+    return;
+  }
   let tokenTransfer = getOrCreateTokenTransfer(
-    event.params.id,
+    event.transaction.hash,
     event.address,
     event.params.from,
     event.params.to,
@@ -66,4 +70,36 @@ export function handleTransferEvent(
   receivedTx.gasPrice = BigInt.fromI32(0);
   receivedTx.gasUsed = BigInt.fromI32(0);
   receivedTx.save();
+}
+
+export function handleApprovalEvent(
+  event: Approval
+): void {
+  if (isZeroAddress(event.params.owner) ||
+    isZeroAddress(event.params.spender)) {
+    return;
+  }
+  if (isInternalTx(event.address, event.transaction.to)) {
+    return;
+  }
+  let tokenApproval = new TokenApproval(event.transaction.hash.toHex());
+  tokenApproval.token = getOrCreateToken(event.address).id;
+  tokenApproval.owner = getOrCreateAccount(event.params.owner.toHex()).id;
+  tokenApproval.spender = getOrCreateAccount(event.params.owner.toHex()).id;
+  tokenApproval.amount = event.params.value;
+  tokenApproval.save();
+
+  let tx = getOrCreateTransaction(
+    event.block.number,
+    event.transaction.hash,
+    event.params.owner,
+    "TokenApproved",
+    event.transaction.value,
+    event.address,
+    event.transaction.gasPrice,
+    event.transaction.gasUsed,
+    event.block.timestamp,
+  )
+  tx.tokenApproval = tokenApproval.id;
+  tx.save();
 }
