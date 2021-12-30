@@ -1,5 +1,5 @@
 import {
-  Address,
+  Address, log,
 } from "@graphprotocol/graph-ts";
 import {
   PairCreated,
@@ -53,7 +53,7 @@ export function handleBurn(
   let pairChange = getOrCreatePairChange(
     event.transaction.hash,
     event.address,
-    event.params.sender,
+    event.params.to,
     "Burn",
   );
   pairChange.amount0 = event.params.amount0;
@@ -70,7 +70,7 @@ export function handleBurn(
     event.transaction.gasUsed,
     event.block.timestamp,
   )
-  if (event.params.to.toHex() != event.params.sender.toHex()) {
+  if (event.params.to.toHex() != event.transaction.from.toHex()) {
     tx.gasPrice = ZERO;
     tx.gasUsed = ZERO;
   }
@@ -81,13 +81,13 @@ export function handleBurn(
 export function handleMint(
   event: Mint
 ): void {
-  if (!isProfileCreated(event.params.sender)) {
+  if (!isProfileCreated(event.transaction.from)) {
     return;
   }
   let pairChange = getOrCreatePairChange(
     event.transaction.hash,
     event.address,
-    event.params.sender,
+    event.transaction.from,
     "Mint",
   );
   pairChange.amount0 = event.params.amount0;
@@ -96,7 +96,7 @@ export function handleMint(
   let tx = getOrCreateTransaction(
     event.block.number,
     event.transaction.hash,
-    event.params.sender,
+    event.transaction.from,
     "LiquidityAdded",
     event.transaction.value,
     event.address,
@@ -111,13 +111,13 @@ export function handleMint(
 export function handleSwap(
   event: Swap
 ): void {
-  if (!isProfileCreated(event.params.sender)) {
+  if (!isProfileCreated(event.params.to)) {
     return;
   }
   let pairChange = getOrCreatePairChange(
     event.transaction.hash,
     event.address,
-    event.params.sender,
+    event.params.to,
     "Swap",
   );
   pairChange.amount0In = event.params.amount0In;
@@ -136,7 +136,7 @@ export function handleSwap(
     event.transaction.gasUsed,
     event.block.timestamp,
   )
-  if (event.params.to.toHex() != event.params.sender.toHex()) {
+  if (event.params.to.toHex() != event.transaction.from.toHex()) {
     tx.gasPrice = ZERO;
     tx.gasUsed = ZERO;
   }
