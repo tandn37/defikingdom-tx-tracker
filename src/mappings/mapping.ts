@@ -1,10 +1,11 @@
 
 import { Address } from "@graphprotocol/graph-ts";
 
-let JEWEL_CONTRACT_ADDRESS = "0x72cb10c6bfa5624dd07ef608027e366bd690048f";
-let JEWEL_ONE_LP_TOKEN_ADDRESS = "0xeb579ddcd49a7beb3f205c9ff6006bb6390f138f";
-let JEWEL_USDC_LP_TOKEN_ADDRESS = "0xa1221a5bbea699f507cc00bdedea05b5d2e32eba";
-let UNISWAP_FACTORY_ADDRESS = "0x9014b937069918bd319f80e8b3bb4a2cf6faa5f7";
+export let JEWEL_CONTRACT_ADDRESS = "0x72cb10c6bfa5624dd07ef608027e366bd690048f";
+export let JEWEL_ONE_LP_TOKEN_ADDRESS = "0xeb579ddcd49a7beb3f205c9ff6006bb6390f138f";
+export let JEWEL_USDC_LP_TOKEN_ADDRESS = "0xa1221a5bbea699f507cc00bdedea05b5d2e32eba";
+export let UNISWAP_FACTORY_ADDRESS = "0x9014b937069918bd319f80e8b3bb4a2cf6faa5f7";
+let QUEST_CONTRACT_ADDRESS = "0x5100bd31b822371108a0f63dcfb6594b9919eaf4";
 let BANK_CONTRACT_ADDRESS = "0xa9ce83507d872c5e1273e745abcfda849daa654f";
 let GOLD_CONTRACT_ADDRESS = "0x3a4edcf3312f44ef027acfd8c21382a5259936e7";
 
@@ -41,4 +42,12 @@ export function isBankAddress(address: Address): bool {
 
 export function isGoldAddress(address: Address): bool {
   return address.toHex() == GOLD_CONTRACT_ADDRESS;
+}
+
+export function isQuestContract(address: Address): bool {
+  return address.toHex() == QUEST_CONTRACT_ADDRESS;
+}
+
+export function isGovernanceToken(address: string): bool {
+  return address == JEWEL_CONTRACT_ADDRESS;
 }

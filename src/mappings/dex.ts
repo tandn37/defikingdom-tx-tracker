@@ -1,4 +1,7 @@
 import {
+  Address,
+} from "@graphprotocol/graph-ts";
+import {
   PairCreated,
 } from "../../generated/Dex/UniswapV2Factory";
 import {
@@ -22,6 +25,7 @@ import {
   getOrCreateTransaction,
   isProfileCreated,
   ZERO,
+  getTokenGovernancePair,
 } from "./common";
 import {
   handleTransferEvent as handleTransfer,
@@ -147,6 +151,18 @@ export function handleSync(
   pair.reserve0 = event.params.reserve0;
   pair.reserve1 = event.params.reserve1;
   pair.save();
+
+  let token0 = getOrCreateToken(Address.fromString(pair.token0));
+  let token0Pair = getTokenGovernancePair(token0.id);
+  if (token0Pair) {
+    token0.governancePair = token0Pair.id;
+    token0.save();
+  }
+  let token1 = getOrCreateToken(Address.fromString(pair.token1));
+  let token1Pair = getTokenGovernancePair(token1.id);
+  if (token1Pair) {
+    token1.governancePair = token0Pair.id;
+  }
 }
 
 export function handleTransferEvent(

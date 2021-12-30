@@ -85,7 +85,7 @@ enum AuctionType {
 
 type Profile @entity {
   id: ID!
-  player: Account!,
+  profileId: BigInt!
   name: String!,
   createdAt: BigInt!,
   picId: Int!
@@ -94,7 +94,7 @@ type Profile @entity {
 
 type Account @entity {
   id: ID!
-  profile: Profile @derivedFrom(field: "player")
+  profile: Profile
   transactions: [Transaction!] @derivedFrom(field: "player")
 }
 
@@ -103,6 +103,7 @@ type Token @entity {
   name: String!
   symbol: String!
   decimal: Int!
+  governancePair: Pair
 }
 
 type Hero @entity {
@@ -265,6 +266,11 @@ type HeroApproval @entity {
   approvedAll: Boolean
 }
 
+type PairGovernanceAddress @entity {
+  id: ID!
+  value: String!
+}
+
 type Transaction @entity {
   id: ID!
   block: Int!
@@ -288,5 +294,7 @@ type Transaction @entity {
   profile: Profile
   tokenApproval: TokenApproval
   heroApproval: HeroApproval
+  gasPair: Pair
+  governanceUSDPair: Pair
   timestamp: Int!
 }

@@ -1,4 +1,3 @@
-import { BigInt } from "@graphprotocol/graph-ts";
 import {
   Approval,
   Transfer
@@ -14,27 +13,12 @@ import {
   ZERO,
 } from "./common";
 import {
-  isBankTransfer,
-  handleBankTransfer,
-} from "./bank";
-import {
   isInternalTx
 } from './common';
 
-export function handleTransferEvent(
+export function createTransferTx(
   event: Transfer
 ): void {
-  if (isZeroAddress(event.params.from) ||
-    isZeroAddress(event.params.to)) {
-      return;
-    }
-  if (isBankTransfer(event)) {
-    handleBankTransfer(event);
-    return;
-  }
-  if (isInternalTx(event.address, event.transaction.to)) {
-    return;
-  }
   let tokenTransfer = getOrCreateTokenTransfer(
     event.transaction.hash,
     event.address,
@@ -42,7 +26,7 @@ export function handleTransferEvent(
     event.params.to,
     event.params.value,
   );
-  
+
   if (isProfileCreated(event.params.from)) {
     let sentTx = getOrCreateTransaction(
       event.block.number,
@@ -73,6 +57,19 @@ export function handleTransferEvent(
     receivedTx.tokenTransfer = tokenTransfer.id;
     receivedTx.save();
   }
+}
+
+export function handleTransferEvent(
+  event: Transfer
+): void {
+  if (isZeroAddress(event.params.from) ||
+    isZeroAddress(event.params.to)) {
+      return;
+    }
+  if (isInternalTx(event.address, event.transaction.to)) {
+    return;
+  }
+  createTransferTx(event);
 }
 
 export function handleApprovalEvent(

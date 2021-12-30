@@ -4,434 +4,586 @@ repository: https://github.com/tandn37/defikingdom-tx-tracker
 schema:
   file: ./schema.graphql
 
-# dataSources:
-#   - kind: ethereum/contract
-#     name: Profile
-#     network: mainnet
-#     source:
-#       address: "0xabD4741948374b1f5DD5Dd7599AC1f85A34cAcDD"
-#       abi: Profile
-#       startBlock: 16339595
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Profile
-#         - Account
-#         - Transaction
-#       abis:
-#         - name: Profile
-#           file: ./abis/Profile.json
-#         - name: ERC20
-#           file: ./abis/ERC20.json
-#       eventHandlers:
-#         - event: ProfileCreated(uint256,address,string,uint64,uint8)
-#           handler: handleProfileCreated
-#         - event: ProfileUpdated(uint256,address,string,uint64,uint8,uint256)
-#           handler: handleProfileUpdated
-#       file: ./src/mappings/profile.ts
+dataSources:
+  - kind: ethereum/contract
+    name: Profile
+    network: mainnet
+    source:
+      address: "0xabD4741948374b1f5DD5Dd7599AC1f85A34cAcDD"
+      abi: Profile
+      startBlock: 16339595
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Profile
+        - Account
+        - Transaction
+      abis:
+        - name: Profile
+          file: ./abis/Profile.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: ProfileCreated(uint256,address,string,uint64,uint8)
+          handler: handleProfileCreated
+        - event: ProfileUpdated(uint256,address,string,uint64,uint8,uint256)
+          handler: handleProfileUpdated
+      file: ./src/mappings/profile.ts
 
-# dataSources:
-#   - kind: ethereum/contract
-#     name: Quest
-#     network: mainnet
-#     source:
-#       address: "0x5100Bd31b822371108A0f63DCFb6594b9919Eaf4"
-#       abi: Quest
-#       startBlock: 19875503
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Quest
-#         - Account
-#         - Transaction
-#       abis:
-#         - name: Quest
-#           file: ./abis/Quest.json
-#         - name: ERC20
-#           file: ./abis/ERC20.json
-#       eventHandlers:
-#         - event: QuestCanceled(indexed uint256,indexed address,indexed uint256,(uint256,address,uint256[],address,uint256,uint256,uint256,uint8,uint8))
-#           handler: handleQuestCanceled
-#         - event: QuestCompleted(indexed uint256,indexed address,indexed uint256,(uint256,address,uint256[],address,uint256,uint256,uint256,uint8,uint8))
-#           handler: handleQuestCompleted
-#         - event: QuestStarted(indexed uint256,indexed address,indexed uint256,(uint256,address,uint256[],address,uint256,uint256,uint256,uint8,uint8))
-#           handler: handleQuestStarted
-#         - event: QuestReward(indexed uint256,indexed address,uint256,address,uint256)
-#           handler: handleQuestReward
-#       file: ./src/mappings/quest.ts
+  - kind: ethereum/contract
+    name: Quest
+    network: mainnet
+    source:
+      address: "0x5100Bd31b822371108A0f63DCFb6594b9919Eaf4"
+      abi: Quest
+      startBlock: 19875503
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Quest
+        - Account
+        - Transaction
+      abis:
+        - name: Quest
+          file: ./abis/Quest.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: QuestCanceled(indexed uint256,indexed address,indexed uint256,(uint256,address,uint256[],address,uint256,uint256,uint256,uint8,uint8))
+          handler: handleQuestCanceled
+        - event: QuestCompleted(indexed uint256,indexed address,indexed uint256,(uint256,address,uint256[],address,uint256,uint256,uint256,uint8,uint8))
+          handler: handleQuestCompleted
+        - event: QuestStarted(indexed uint256,indexed address,indexed uint256,(uint256,address,uint256[],address,uint256,uint256,uint256,uint8,uint8))
+          handler: handleQuestStarted
+        - event: QuestReward(indexed uint256,indexed address,uint256,address,uint256)
+          handler: handleQuestReward
+      file: ./src/mappings/quest.ts
 
-# dataSources:
-#   - kind: ethereum/contract
-#     name: HeroSale
-#     network: mainnet
-#     source:
-#       address: "0xa2D001C829328aa06a2DB2740c05ceE1bFA3c6bb"
-#       abi: HeroSale
-#       startBlock: 17878898
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Hero
-#         - Crystal
-#         - HeroSale
-#         - Account
-#         - Transaction
-#       abis:
-#         - name: HeroSale
-#           file: ./abis/HeroSale.json
-#         - name: ERC20
-#           file: ./abis/ERC20.json
-#       eventHandlers:
-#         - event: CrystalOpen(indexed address,uint256,uint256)
-#           handler: handleCrystalOpen
-#         - event: Gen0Purchase(indexed address,uint256,uint256,uint256)
-#           handler: handleGen0Purchase
-#       file: ./src/mappings/hero-sale.ts
+  - kind: ethereum/contract
+    name: HeroSale
+    network: mainnet
+    source:
+      address: "0xa2D001C829328aa06a2DB2740c05ceE1bFA3c6bb"
+      abi: HeroSale
+      startBlock: 17878898
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Hero
+        - Crystal
+        - HeroSale
+        - Account
+        - Transaction
+      abis:
+        - name: HeroSale
+          file: ./abis/HeroSale.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: CrystalOpen(indexed address,uint256,uint256)
+          handler: handleCrystalOpen
+        - event: Gen0Purchase(indexed address,uint256,uint256,uint256)
+          handler: handleGen0Purchase
+      file: ./src/mappings/hero-sale.ts
 
-# dataSources:
-#   - kind: ethereum/contract
-#     name: AuctionHouse
-#     network: mainnet
-#     source:
-#       address: "0x13a65B9F8039E2c032Bc022171Dc05B30c3f2892"
-#       abi: AuctionHouse
-#       startBlock: 18597670
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Hero
-#         - Account
-#         - Transaction
-#         - HeroAuction
-#       abis:
-#         - name: AuctionHouse
-#           file: ./abis/AuctionHouse.json
-#         - name: ERC20
-#           file: ./abis/ERC20.json
-#       eventHandlers:
-#         - event: AuctionCancelled(uint256,indexed uint256)
-#           handler: handleAuctionCancelled
-#         - event: AuctionCreated(uint256,indexed address,indexed uint256,uint256,uint256,uint256,address)
-#           handler: handleAuctionCreated
-#         - event: AuctionSuccessful(uint256,indexed uint256,uint256,address)
-#           handler: handleAuctionSuccessful
-#       file: ./src/mappings/auction-house.ts
+  - kind: ethereum/contract
+    name: AuctionHouse
+    network: mainnet
+    source:
+      address: "0x13a65B9F8039E2c032Bc022171Dc05B30c3f2892"
+      abi: AuctionHouse
+      startBlock: 18597670
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Hero
+        - Account
+        - Transaction
+        - HeroAuction
+      abis:
+        - name: AuctionHouse
+          file: ./abis/AuctionHouse.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: AuctionCancelled(uint256,indexed uint256)
+          handler: handleAuctionCancelled
+        - event: AuctionCreated(uint256,indexed address,indexed uint256,uint256,uint256,uint256,address)
+          handler: handleAuctionCreated
+        - event: AuctionSuccessful(uint256,indexed uint256,uint256,address)
+          handler: handleAuctionSuccessful
+      file: ./src/mappings/auction-house.ts
 
-# dataSources:
-#   - kind: ethereum/contract
-#     name: MeditationCircle
-#     network: mainnet
-#     source:
-#       address: "0x0594d86b2923076a2316eaea4e1ca286daa142c1"
-#       abi: MeditationCircle
-#       startBlock: 20259186
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Transaction
-#         - Meditation
-#       abis:
-#         - name: MeditationCircle
-#           file: ./abis/MeditationCircle.json
-#         - name: ERC20
-#           file: ./abis/ERC20.json
-#       eventHandlers:
-#         - event: MeditationBegun(indexed address,indexed uint256,uint256,uint8,uint8,uint8,address)
-#           handler: handleMeditationBegun
-#         - event: MeditationCompleted(indexed address,indexed uint256,uint256)
-#           handler: handleMeditationCompleted
-#       file: ./src/mappings/meditation-circle.ts
+  - kind: ethereum/contract
+    name: MeditationCircle
+    network: mainnet
+    source:
+      address: "0x0594d86b2923076a2316eaea4e1ca286daa142c1"
+      abi: MeditationCircle
+      startBlock: 20259186
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Transaction
+        - Meditation
+      abis:
+        - name: MeditationCircle
+          file: ./abis/MeditationCircle.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: MeditationBegun(indexed address,indexed uint256,uint256,uint8,uint8,uint8,address)
+          handler: handleMeditationBegun
+        - event: MeditationCompleted(indexed address,indexed uint256,uint256)
+          handler: handleMeditationCompleted
+      file: ./src/mappings/meditation-circle.ts
 
-# dataSources:
-#   - kind: ethereum/contract
-#     name: HeroSummoning
-#     network: mainnet
-#     source:
-#       address: "0x65dea93f7b886c33a78c10343267dd39727778c2"
-#       abi: HeroSummoning
-#       startBlock: 18597665
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Hero
-#         - Account
-#         - Crystal
-#         - Transaction
-#       abis:
-#         - name: HeroSummoning
-#           file: ./abis/HeroSummoning.json
-#         - name: ERC20
-#           file: ./abis/ERC20.json
-#       eventHandlers:
-#         - event: CrystalOpen(indexed address,uint256,uint256)
-#           handler: handleCrystalOpen
-#         - event: AuctionCancelled(uint256,indexed uint256)
-#           handler: handleAuctionCancelled
-#         - event: AuctionCreated(uint256,indexed address,indexed uint256,uint256,uint256,uint256,address)
-#           handler: handleAuctionCreated
-#         - event: AuctionSuccessful(uint256,indexed uint256,uint256,address)
-#           handler: handleAuctionSuccessful
-#         - event: CrystalSummoned(uint256,indexed address,uint256,uint256,uint16,uint256,uint8,uint8,address)
-#           handler: handleCrystalSummoned
-#       file: ./src/mappings/hero-summoning.ts
+  - kind: ethereum/contract
+    name: HeroSummoning
+    network: mainnet
+    source:
+      address: "0x65dea93f7b886c33a78c10343267dd39727778c2"
+      abi: HeroSummoning
+      startBlock: 18597665
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Hero
+        - Account
+        - Crystal
+        - Transaction
+      abis:
+        - name: HeroSummoning
+          file: ./abis/HeroSummoning.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: CrystalOpen(indexed address,uint256,uint256)
+          handler: handleCrystalOpen
+        - event: AuctionCancelled(uint256,indexed uint256)
+          handler: handleAuctionCancelled
+        - event: AuctionCreated(uint256,indexed address,indexed uint256,uint256,uint256,uint256,address)
+          handler: handleAuctionCreated
+        - event: AuctionSuccessful(uint256,indexed uint256,uint256,address)
+          handler: handleAuctionSuccessful
+        - event: CrystalSummoned(uint256,indexed address,uint256,uint256,uint16,uint256,uint8,uint8,address)
+          handler: handleCrystalSummoned
+      file: ./src/mappings/hero-summoning.ts
 
-# dataSources:
-#   - kind: ethereum/contract
-#     name: Jewel
-#     network: mainnet
-#     source:
-#       address: "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F"
-#       abi: ERC20
-#       startBlock: 16339532
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Token
-#         - Account
-#         - TokenTransfer
-#         - Transaction
-#         - TokenApproval
-#       abis:
-#         - name: ERC20
-#           file: ./abis/ERC20.json
-#       eventHandlers:
-#         - event: Approval(indexed address,indexed address,uint256)
-#           handler: handleApprovalEvent
-#         - event: Transfer(indexed address,indexed address,uint256)
-#           handler: handleTransferEvent
-#       file: ./src/mappings/erc20.ts
-#   - kind: ethereum/contract
-#     name: Gold
-#     network: mainnet
-#     source:
-#       address: "0x3a4edcf3312f44ef027acfd8c21382a5259936e7"
-#       abi: ERC20
-#       startBlock: 19998695
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Token
-#         - Account
-#         - TokenApproval
-#         - Transaction
-#       abis:
-#         - name: ERC20
-#           file: ./abis/ERC20.json
-#       eventHandlers:
-#         - event: Approval(indexed address,indexed address,uint256)
-#           handler: handleApprovalEvent
-#         - event: Transfer(indexed address,indexed address,uint256)
-#           handler: handleTransferEvent
-#       file: ./src/mappings/erc20.ts
-#   - kind: ethereum/contract
-#     name: xJewel
-#     network: mainnet
-#     source:
-#       address: "0xa9ce83507d872c5e1273e745abcfda849daa654f"
-#       abi: ERC20
-#       startBlock: 16339547
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Token
-#         - Account
-#         - TokenApproval
-#         - Transaction
-#       abis:
-#         - name: ERC20
-#           file: ./abis/ERC20.json
-#       eventHandlers:
-#         - event: Approval(indexed address,indexed address,uint256)
-#           handler: handleApprovalEvent
-#         - event: Transfer(indexed address,indexed address,uint256)
-#           handler: handleTransferEvent
-#       file: ./src/mappings/erc20.ts
+  - kind: ethereum/contract
+    name: Jewel
+    network: mainnet
+    source:
+      address: "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F"
+      abi: ERC20
+      startBlock: 16339532
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Account
+        - TokenTransfer
+        - Transaction
+        - TokenApproval
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApprovalEvent
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferEvent
+      file: ./src/mappings/jewel.ts
+  - kind: ethereum/contract
+    name: Gold
+    network: mainnet
+    source:
+      address: "0x3a4edcf3312f44ef027acfd8c21382a5259936e7"
+      abi: ERC20
+      startBlock: 19998695
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Account
+        - TokenApproval
+        - Transaction
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApprovalEvent
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferEvent
+      file: ./src/mappings/erc20.ts
+  - kind: ethereum/contract
+    name: xJewel
+    network: mainnet
+    source:
+      address: "0xa9ce83507d872c5e1273e745abcfda849daa654f"
+      abi: ERC20
+      startBlock: 16339547
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Account
+        - TokenApproval
+        - Transaction
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApprovalEvent
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferEvent
+      file: ./src/mappings/erc20.ts
+  - kind: ethereum/contract
+    name: GaiaTear
+    network: mainnet
+    source:
+      address: "0x24eA0D436d3c2602fbfEfBe6a16bBc304C963D04"
+      abi: ERC20
+      startBlock: 17619144
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Account
+        - TokenApproval
+        - Transaction
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApprovalEvent
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferEvent
+      file: ./src/mappings/hero-summon-fee-token.ts
+  - kind: ethereum/contract
+    name: ShvasRune
+    network: mainnet
+    source:
+      address: "0x24eA0D436d3c2602fbfEfBe6a16bBc304C963D04"
+      abi: ERC20
+      startBlock: 19875691
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Account
+        - TokenApproval
+        - Transaction
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApprovalEvent
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferEvent
+      file: ./src/mappings/hero-summon-fee-token.ts
+  - kind: ethereum/contract
+    name: BluePetEgg
+    network: mainnet
+    source:
+      address: "0x9678518e04fe02fb30b55e2d0e554e26306d0892"
+      abi: ERC20
+      startBlock: 19876059
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Account
+        - TokenApproval
+        - Transaction
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApprovalEvent
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferEvent
+      file: ./src/mappings/erc20.ts
+  - kind: ethereum/contract
+    name: GreyPetEgg
+    network: mainnet
+    source:
+      address: "0x95d02c1dc58f05a015275eb49e107137d9ee81dc"
+      abi: ERC20
+      startBlock: 19875700
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Account
+        - TokenApproval
+        - Transaction
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApprovalEvent
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferEvent
+      file: ./src/mappings/erc20.ts
+  - kind: ethereum/contract
+    name: GreenPetEgg
+    network: mainnet
+    source:
+      address: "0x6d605303e9Ac53C59A3Da1ecE36C9660c7A71da5"
+      abi: ERC20
+      startBlock: 20820510
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Account
+        - TokenApproval
+        - Transaction
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApprovalEvent
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferEvent
+      file: ./src/mappings/erc20.ts
 
-# dataSources:
-#   - kind: ethereum/contract
-#     name: HeroTransfer
-#     network: mainnet
-#     source:
-#       address: "0x5F753dcDf9b1AD9AabC1346614D1f4746fd6Ce5C"
-#       abi: ERC721
-#       startBlock: 17619152
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Token
-#         - Account
-#         - HeroTransfer
-#         - Transaction
-#       abis:
-#         - name: ERC721
-#           file: ./abis/ERC721.json
-#       eventHandlers:
-#         - event: Approval(indexed address,indexed address,indexed uint256)
-#           handler: handleApprovalEvent
-#         - event: ApprovalForAll(indexed address,indexed address,bool)
-#           handler: handleApprovalForAll
-#         - event: Transfer(indexed address,indexed address,indexed uint256)
-#           handler: handleTransferEvent
-#       file: ./src/mappings/hero-transfer.ts
+  - kind: ethereum/contract
+    name: HeroTransfer
+    network: mainnet
+    source:
+      address: "0x5F753dcDf9b1AD9AabC1346614D1f4746fd6Ce5C"
+      abi: ERC721
+      startBlock: 17619152
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Account
+        - HeroTransfer
+        - Transaction
+      abis:
+        - name: ERC721
+          file: ./abis/ERC721.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApprovalEvent
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransferEvent
+      file: ./src/mappings/hero-transfer.ts
 
-# dataSources:
-#   - kind: ethereum/contract
-#     name: Vendor
-#     network: mainnet
-#     source:
-#       address: "0xe53bf78f8b99b6d356f93f41afb9951168cca2c6"
-#       abi: Vendor
-#       startBlock: 19998702
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Token
-#         - Account
-#         - ItemTrading
-#         - Transaction
-#       abis:
-#         - name: Vendor
-#           file: ./abis/Vendor.json
-#         - name: ERC20
-#           file: ./abis/ERC20.json
-#       eventHandlers:
-#         - event: ItemTraded(indexed address,address,uint256,address,uint256)
-#           handler: handleItemTraded
-#         - event: ItemAdded(indexed address,uint256,uint256)
-#           handler: handleItemAdded
-#       file: ./src/mappings/item-trading.ts
+  - kind: ethereum/contract
+    name: Vendor
+    network: mainnet
+    source:
+      address: "0xe53bf78f8b99b6d356f93f41afb9951168cca2c6"
+      abi: Vendor
+      startBlock: 19998702
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Account
+        - ItemTrading
+        - Transaction
+      abis:
+        - name: Vendor
+          file: ./abis/Vendor.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: ItemTraded(indexed address,address,uint256,address,uint256)
+          handler: handleItemTraded
+        - event: ItemAdded(indexed address,uint256,uint256)
+          handler: handleItemAdded
+      file: ./src/mappings/item-trading.ts
 
-# dataSources:
-#   - kind: ethereum/contract
-#     name: MasterGardener
-#     network: mainnet
-#     source:
-#       address: "0xDB30643c71aC9e2122cA0341ED77d09D5f99F924"
-#       abi: MasterGardener
-#       startBlock: 16339568
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Token
-#         - Account
-#         - GardenInfo
-#         - Transaction
-#       abis:
-#         - name: MasterGardener
-#           file: ./abis/MasterGardener.json
-#         - name: ERC20
-#           file: ./abis/ERC20.json
-#       eventHandlers:
-#         - event: Deposit(indexed address,indexed uint256,uint256)
-#           handler: handleDeposit
-#         - event: Withdraw(indexed address,indexed uint256,uint256)
-#           handler: handleWithdraw
-#         - event: EmergencyWithdraw(indexed address,indexed uint256,uint256)
-#           handler: handleWithdraw
-#         - event: SendGovernanceTokenReward(indexed address,indexed uint256,uint256,uint256)
-#           handler: handleReward
-#       file: ./src/mappings/garden.ts
+  - kind: ethereum/contract
+    name: MasterGardener
+    network: mainnet
+    source:
+      address: "0xDB30643c71aC9e2122cA0341ED77d09D5f99F924"
+      abi: MasterGardener
+      startBlock: 16339568
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Account
+        - GardenInfo
+        - Transaction
+      abis:
+        - name: MasterGardener
+          file: ./abis/MasterGardener.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: Deposit(indexed address,indexed uint256,uint256)
+          handler: handleDeposit
+        - event: Withdraw(indexed address,indexed uint256,uint256)
+          handler: handleWithdraw
+        - event: EmergencyWithdraw(indexed address,indexed uint256,uint256)
+          handler: handleWithdraw
+        - event: SendGovernanceTokenReward(indexed address,indexed uint256,uint256,uint256)
+          handler: handleReward
+      file: ./src/mappings/garden.ts
 
-# dataSources:
-#   - kind: ethereum/contract
-#     name: Dex
-#     network: mainnet
-#     source:
-#       address: "0x9014B937069918bd319f80e8B3BB4A2cf6FAA5F7"
-#       abi: UniswapV2Factory
-#       startBlock: 16339523
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Token
-#         - Pair
-#       abis:
-#         - name: ERC20
-#           file: ./abis/ERC20.json
-#         - name: UniswapV2Factory
-#           file: ./abis/UniswapV2Factory.json
-#       eventHandlers:
-#         - event: PairCreated(indexed address,indexed address,address,uint256)
-#           handler: handlePairCreated
-#       file: ./src/mappings/dex.ts
+  - kind: ethereum/contract
+    name: Dex
+    network: mainnet
+    source:
+      address: "0x9014B937069918bd319f80e8B3BB4A2cf6FAA5F7"
+      abi: UniswapV2Factory
+      startBlock: 16339523
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Pair
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: PairCreated(indexed address,indexed address,address,uint256)
+          handler: handlePairCreated
+      file: ./src/mappings/dex.ts
 
-# templates:
-#   - kind: ethereum/contract
-#     name: Pair
-#     network: mainnet
-#     source:
-#       abi: UniswapV2Pair
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Pair
-#         - Token
-#       abis:
-#         - name: UniswapV2Pair
-#           file: ./abis/UniswapV2Pair.json
-#         - name: ERC20
-#           file: ./abis/ERC20.json
-#       eventHandlers:
-#         - event: Burn(indexed address,uint256,uint256,indexed address)
-#           handler: handleBurn
-#         - event: Mint(indexed address,uint256,uint256)
-#           handler: handleMint
-#         - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
-#           handler: handleSwap
-#         - event: Sync(uint112,uint112)
-#           handler: handleSync
-#         - event: Approval(indexed address,indexed address,uint256)
-#           handler: handleApprovalEvent
-#         - event: Transfer(indexed address,indexed address,uint256)
-#           handler: handleTransferEvent
-#       file: ./src/mappings/dex.ts
+templates:
+  - kind: ethereum/contract
+    name: Pair
+    network: mainnet
+    source:
+      abi: UniswapV2Pair
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Pair
+        - Token
+      abis:
+        - name: UniswapV2Pair
+          file: ./abis/UniswapV2Pair.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: Burn(indexed address,uint256,uint256,indexed address)
+          handler: handleBurn
+        - event: Mint(indexed address,uint256,uint256)
+          handler: handleMint
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwap
+        - event: Sync(uint112,uint112)
+          handler: handleSync
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApprovalEvent
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferEvent
+      file: ./src/mappings/dex.ts
 
-# templates:
-#   - kind: ethereum/contract
-#     name: Item
-#     network: mainnet
-#     source:
-#       abi: ERC20
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       entities:
-#         - Token
-#       abis:
-#         - name: ERC20
-#           file: ./abis/ERC20.json
-#       eventHandlers:
-#         - event: Approval(indexed address,indexed address,uint256)
-#           handler: handleApprovalEvent
-#         - event: Transfer(indexed address,indexed address,uint256)
-#           handler: handleTransferEvent
-#       file: ./src/mappings/erc20.ts
+  - kind: ethereum/contract
+    name: Item
+    network: mainnet
+    source:
+      abi: ERC20
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApprovalEvent
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferEvent
+      file: ./src/mappings/erc20.ts

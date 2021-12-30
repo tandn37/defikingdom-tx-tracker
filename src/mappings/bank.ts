@@ -1,4 +1,3 @@
-import { log } from "@graphprotocol/graph-ts";
 import {
   Transfer
 } from "../../generated/Jewel/ERC20";

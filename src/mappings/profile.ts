@@ -13,13 +13,15 @@ import {
 export function handleProfileCreated(
   event: ProfileCreated
 ): void {
-  let profile = new Profile(event.params.profileId.toString());
-  let player = getOrCreateAccount(event.params.owner.toHex());
-  profile.player = player.id;
+  let profile = new Profile(event.params.owner.toHex());
+  profile.profileId = event.params.profileId;
   profile.name = event.params.name;
   profile.createdAt = event.params.created;
   profile.picId = event.params.picId;
   profile.save();
+  let player = getOrCreateAccount(event.params.owner.toHex());
+  player.profile = profile.id;
+  player.save();
 
   let tx = getOrCreateTransaction(
     event.block.number,

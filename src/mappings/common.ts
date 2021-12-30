@@ -2,10 +2,12 @@ import {
   ERC20,
 } from "../../generated/Jewel/ERC20";
 import {
+  UniswapV2Factory,
+} from "../../generated/Dex/UniswapV2Factory"
+import {
   Address,
   BigInt,
   Bytes,
-  log,
 } from "@graphprotocol/graph-ts";
 import {
   Account,
@@ -22,7 +24,16 @@ import {
   Pair,
   PairChange,
   GardenInfo,
+  PairGovernanceAddress,
+  Profile,
 } from "../../generated/schema";
+import {
+  JEWEL_ONE_LP_TOKEN_ADDRESS,
+  JEWEL_USDC_LP_TOKEN_ADDRESS,
+  JEWEL_CONTRACT_ADDRESS,
+  isGovernanceToken,
+  UNISWAP_FACTORY_ADDRESS,
+} from "./mapping";
 
 export let ZERO = BigInt.fromI32(0);
 
@@ -126,6 +137,14 @@ export function getOrCreateTransaction(
   timestamp: BigInt,
 ): Transaction {
   let tx = new Transaction(getTransactionId(txHash, type));
+  let governancePair = Pair.load(JEWEL_USDC_LP_TOKEN_ADDRESS);
+  let gasPair = Pair.load(JEWEL_ONE_LP_TOKEN_ADDRESS);
+  if (governancePair) {
+    tx.governanceUSDPair = governancePair.id;
+  }
+  if (gasPair) {
+    tx.gasPair = gasPair.id;
+  }
   let account = getOrCreateAccount(player.toHex());
   tx.block = block.toI32();
   tx.hash = txHash.toHex();
@@ -313,9 +332,28 @@ export function isInternalTx(
 export function isProfileCreated(
   address: Address,
 ): bool {
-  let account = getOrCreateAccount(address.toHex());
-  if (account.profile) {
+  let profile = Profile.load(address.toHex());
+  if (profile) {
     return true;
   }
   return false;
+}
+
+export function getTokenGovernancePair(
+  address: string,
+): Pair | null {
+  if (isGovernanceToken(address)) {
+    return null;
+  }
+  let pairGovernanceAddress = PairGovernanceAddress.load(address);
+  if (!pairGovernanceAddress) {
+    let factory = UniswapV2Factory.bind(Address.fromString(UNISWAP_FACTORY_ADDRESS));
+    let pairAddress = factory.getPair(Address.fromString(address), Address.fromString(JEWEL_CONTRACT_ADDRESS));
+    let pga = new PairGovernanceAddress(address);
+    pga.value = pairAddress.toHex();
+    pga.save();
+    return Pair.load(pairAddress.toHex());
+  } 
+  let pair = Pair.load(pairGovernanceAddress.value);
+  return pair;
 }
