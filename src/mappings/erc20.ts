@@ -86,7 +86,7 @@ export function handleApprovalEvent(
   let tokenApproval = new TokenApproval(event.transaction.hash.toHex());
   tokenApproval.token = getOrCreateToken(event.address).id;
   tokenApproval.owner = getOrCreateAccount(event.params.owner.toHex()).id;
-  tokenApproval.spender = getOrCreateAccount(event.params.owner.toHex()).id;
+  tokenApproval.spender = getOrCreateAccount(event.params.spender.toHex()).id;
   tokenApproval.amount = event.params.value;
   tokenApproval.save();
 

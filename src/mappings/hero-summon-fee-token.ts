@@ -12,15 +12,20 @@ import {
   handleApprovalEvent as handleApproval,
   createTransferTx,
 } from "./erc20";
+import {
+  isRouterContract,
+} from "./mapping";
 
 export function handleTransferEvent(
   event: Transfer
 ): void {
-  if (isZeroAddress(event.params.from) ||
-    isZeroAddress(event.params.to)) {
+  if (isZeroAddress(event.params.from)) {
     return;
   }
   if (isQuestContract(event.address)) {
+    return;
+  }
+  if (isRouterContract(event.address)) {
     return;
   }
   createTransferTx(event);

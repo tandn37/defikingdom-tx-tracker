@@ -123,7 +123,7 @@ export function handleSwap(
   pairChange.amount0In = event.params.amount0In;
   pairChange.amount1In = event.params.amount1In;
   pairChange.amount0Out = event.params.amount0Out;
-  pairChange.amount0Out = event.params.amount0Out;
+  pairChange.amount1Out = event.params.amount1Out;
   pairChange.save();
   let tx = getOrCreateTransaction(
     event.block.number,

@@ -8,6 +8,7 @@ export let UNISWAP_FACTORY_ADDRESS = "0x9014b937069918bd319f80e8b3bb4a2cf6faa5f7
 let QUEST_CONTRACT_ADDRESS = "0x5100bd31b822371108a0f63dcfb6594b9919eaf4";
 let BANK_CONTRACT_ADDRESS = "0xa9ce83507d872c5e1273e745abcfda849daa654f";
 let GOLD_CONTRACT_ADDRESS = "0x3a4edcf3312f44ef027acfd8c21382a5259936e7";
+let ROUTER_CONTRACT_ADDRESS = "0x24ad62502d1c652cc7684081169d04896ac20f30";
 
 let QUEST_STATUS_MAPPING = new Map<i32, string>()
 QUEST_STATUS_MAPPING.set(1, "Started");
@@ -50,4 +51,8 @@ export function isQuestContract(address: Address): bool {
 
 export function isGovernanceToken(address: string): bool {
   return address == JEWEL_CONTRACT_ADDRESS;
+}
+
+export function isRouterContract(address: Address): bool {
+  return address.toHex() == ROUTER_CONTRACT_ADDRESS;
 }
