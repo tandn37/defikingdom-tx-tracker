@@ -95,7 +95,7 @@ type Profile @entity {
 type Account @entity {
   id: ID!
   profile: Profile
-  transactions: [Transaction!] @derivedFrom(field: "player")
+  totalTxs: BigInt!
 }
 
 type Token @entity {

@@ -44,6 +44,7 @@ export function getOrCreateAccount(
 
   if (!account) {
     account = new Account(address);
+    account.totalTxs = ZERO;
     account.save();
   }
   return account as Account;
@@ -149,6 +150,8 @@ export function getOrCreateTransaction(
     tx.gasPair = gasPair.id;
   }
   let account = getOrCreateAccount(player.toHex());
+  account.totalTxs = account.totalTxs.plus(BigInt.fromI32(1));
+  account.save();
   tx.block = block.toI32();
   tx.hash = txHash.toHex();
   tx.player = account.id;
