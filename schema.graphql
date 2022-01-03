@@ -103,7 +103,7 @@ type Token @entity {
   name: String!
   symbol: String!
   decimal: Int!
-  governancePair: Pair
+  priceAsGovernanceToken: String
 }
 
 type Hero @entity {
@@ -131,6 +131,7 @@ type QuestReward @entity {
   hero: Hero!
   item: Token!
   itemQuantity: Int!
+  priceAsGovernanceToken: String
 }
 
 type HeroAuction @entity {
@@ -184,6 +185,7 @@ type TokenTransfer @entity {
   from: Account!
   to: Account!
   value: BigInt!
+  priceAsGovernanceToken: String
 }
 
 type HeroTransfer @entity {
@@ -246,6 +248,8 @@ type PairChange @entity {
   amount1In: BigInt
   amount0Out: BigInt
   amount1Out: BigInt
+  token0PriceAsGovernanceToken: String
+  token1PriceAsGovernanceToken: String
   to: Account
 }
 

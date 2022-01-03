@@ -155,13 +155,13 @@ export function handleSync(
   let token0 = getOrCreateToken(Address.fromString(pair.token0));
   let token0Pair = getTokenGovernancePair(token0.id);
   if (token0Pair) {
-    token0.governancePair = token0Pair.id;
+    token0.priceAsGovernanceToken = token0Pair.reserve1.toBigDecimal().div(token0Pair.reserve0.toBigDecimal()).toString();
     token0.save();
   }
   let token1 = getOrCreateToken(Address.fromString(pair.token1));
   let token1Pair = getTokenGovernancePair(token1.id);
   if (token1Pair) {
-    token1.governancePair = token0Pair.id;
+    token1.priceAsGovernanceToken = token1Pair.reserve0.toBigDecimal().div(token1Pair.reserve1.toBigDecimal()).toString();
   }
 }
 

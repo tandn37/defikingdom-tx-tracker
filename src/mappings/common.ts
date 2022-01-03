@@ -112,6 +112,9 @@ export function getOrCreateQuestReward(
     questReward.quest = questId.toString();
     questReward.hero = hero.id;
     questReward.item = item.id;
+    if (item.priceAsGovernanceToken) {
+      questReward.priceAsGovernanceToken = item.priceAsGovernanceToken;
+    }
     questReward.itemQuantity = itemQuantity.toI32();
     questReward.save();
   }
@@ -232,6 +235,9 @@ export function getOrCreateTokenTransfer(
     tokenTransfer.from = fromAccount.id;
     tokenTransfer.to = toAccount.id;
     tokenTransfer.value = value;
+    if (token.priceAsGovernanceToken) {
+      tokenTransfer.priceAsGovernanceToken = token.priceAsGovernanceToken;
+    }
     tokenTransfer.save();
   }
   return tokenTransfer as TokenTransfer;
@@ -281,6 +287,18 @@ export function getOrCreatePairChange(
   if (!pairChange) {
     pairChange = new PairChange(hash.toHex());
     pairChange.pair = pair.id;
+    if (pair.token0) {
+      let token0 = getOrCreateToken(Address.fromString(pair.token0));
+      if (token0.priceAsGovernanceToken) {
+        pairChange.token0PriceAsGovernanceToken = token0.priceAsGovernanceToken;
+      }
+    }
+    if (pair.token1) {
+      let token1 = getOrCreateToken(Address.fromString(pair.token1));
+      if (token1.priceAsGovernanceToken) {
+        pairChange.token1PriceAsGovernanceToken = token1.priceAsGovernanceToken;
+      }
+    }
     pairChange.sender = senderAccount.id;
     pairChange.type = type;
     pairChange.save();
